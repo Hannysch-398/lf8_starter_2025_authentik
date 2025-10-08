@@ -1,6 +1,8 @@
 package de.szut.lf8_starter.project;
 
 
+import de.szut.lf8_starter.employee.EmployeeEntity;
+import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.hello.HelloEntity;
 import de.szut.lf8_starter.hello.dto.HelloCreateDto;
 import de.szut.lf8_starter.hello.dto.HelloGetDto;
@@ -44,6 +46,43 @@ public class ProjectController {
 
 
 
+    }
+    @GetMapping
+    public ResponseEntity<List<GetProjectDTO>> getAllProjects() {
+        List<ProjectEntity> all = this.service.readAll();
+        List<GetProjectDTO> dtoList = new LinkedList<>();
+        for (ProjectEntity project : all) {
+            dtoList.add(this.mapper.mapProjectToGetProjectDTO(project));
+        }
+
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetProjectDTO> getProjectById(@PathVariable final long id) {
+        final var entity = this.service.readByID(id);
+        final GetProjectDTO dto = this.mapper.mapProjectToGetProjectDTO(entity);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<List<GetEmployeeDTO>> findAllEmployeesInProject(@PathVariable final long id) {
+
+        var project = this.service.readByID(id);
+
+        if (project == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        var employees = project.getEmployees();
+        List<GetEmployeeDTO> dtoList = new LinkedList<>();
+
+        for (EmployeeEntity employee : employees) {
+            dtoList.add(this.mapper.mapEmployeeToGetEmployeeDTO(employee));
+        }
+
+        return ResponseEntity.ok(dtoList);
     }
 
 

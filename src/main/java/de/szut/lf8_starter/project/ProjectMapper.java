@@ -1,5 +1,7 @@
 package de.szut.lf8_starter.project;
 
+import de.szut.lf8_starter.employee.EmployeeEntity;
+import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,9 @@ public class ProjectMapper {
         return dto;
     }
 
+    public GetEmployeeDTO mapEmployeeToGetEmployeeDTO(EmployeeEntity employee){
+        GetEmployeeDTO dto = new GetEmployeeDTO();
+        return dto;
+    }
 
 }

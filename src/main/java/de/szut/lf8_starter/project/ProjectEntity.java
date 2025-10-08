@@ -40,11 +40,11 @@ public class ProjectEntity {
     private EmployeeEntity emloyee;
 
     */
-//    @OneToMany(mappedBy = "project")
-//    private List<EmployeeEntity> employees;
-//
-//    public List<EmployeeEntity> getEmployees(){
-//        return employees;
-//    }
+/*    @OneToMany(mappedBy = "project")
+   private List<EmployeeEntity> employees;
+
+   public List<EmployeeEntity> getEmployees(){
+        return employees;
+  }*/
 
 }
