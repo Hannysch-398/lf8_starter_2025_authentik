@@ -1,4 +1,23 @@
 package de.szut.lf8_starter.project;
 
+import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
+import de.szut.lf8_starter.project.dto.GetProjectDTO;
+import org.springframework.stereotype.Service;
+
+@Service
+
 public class ProjectMapper {
+
+    public ProjectEntity mapAddProjectDtoToProject(ProjectCreateDTO dto){
+        ProjectEntity newSupplier = new ProjectEntity();
+
+        return null;
+    }
+
+    public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
+        GetProjectDTO dto = new GetProjectDTO();
+        return dto;
+    }
+
+
 }
