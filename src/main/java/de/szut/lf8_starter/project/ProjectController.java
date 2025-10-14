@@ -1,6 +1,8 @@
 package de.szut.lf8_starter.project;
 
 
+import de.szut.lf8_starter.employee.EmployeeEntity;
+import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.hello.HelloEntity;
 import de.szut.lf8_starter.hello.dto.HelloCreateDto;
 import de.szut.lf8_starter.hello.dto.HelloGetDto;
@@ -29,23 +31,22 @@ public class ProjectController {
         this.service = service;
         this.mapper = mapper;
     }
-
     /**
      * POST /api/projects
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<ProjectCreateDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto) {
-        /*
+    public ResponseEntity<ProjectCreateDTO> createProject(
+            @Valid @RequestBody ProjectCreateDTO dto) {
+
         ProjectEntity newProject = this.mapper.mapAddProjectDtoToProject(dto);
         newProject = this.service.create(newProject);
         final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
-        return new ProjectEntity(response, HttpStatus.CREATED);
+        return new ResponseEntity(response, HttpStatus.CREATED);
 
-         */
-        return null;
+
+
     }
-
     @GetMapping
     public ResponseEntity<List<GetProjectDTO>> getAllProjects() {
         List<ProjectEntity> all = this.service.readAll();
