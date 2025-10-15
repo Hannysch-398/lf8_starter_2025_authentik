@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ProjectCreateDTO {
@@ -27,4 +28,6 @@ public class ProjectCreateDTO {
 
     @NotNull(message = "End date is mandatory")
     private LocalDate endDate;
+
+    private List<Long> employeeIds;
 }

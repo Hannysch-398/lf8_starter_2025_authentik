@@ -2,8 +2,9 @@ package de.szut.lf8_starter.project.dto;
 
 import de.szut.lf8_starter.project.ProjectEntity;
 import lombok.Data;
-
+import java.util.List;
 import java.time.LocalDate;
+
 @Data
 public class GetProjectDTO {
     private Long id;
@@ -13,6 +14,7 @@ public class GetProjectDTO {
     private String projectgoal;
     private LocalDate startDate;
     private LocalDate endDate;
+    private List<Long> employeeIds;
 
     public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
         GetProjectDTO dto = new GetProjectDTO();
@@ -23,6 +25,7 @@ public class GetProjectDTO {
         dto.setProjectgoal(project.getProjectgoal());
         dto.setStartDate(project.getStartDate());
         dto.setEndDate(project.getEndDate());
+        dto.setEmployeeIds(project.getEmployeeIds());
         return dto;
     }
 

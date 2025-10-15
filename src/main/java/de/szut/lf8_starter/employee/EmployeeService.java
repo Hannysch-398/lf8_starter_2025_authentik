@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 
 @Service
-public class EmployeeEntity {
+public class EmployeeService {
     private final RestTemplate restTemplate;
 
-    public EmployeeEntity(RestTemplate restTemplate) {
+    public EmployeeService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -24,6 +25,7 @@ public class EmployeeEntity {
             return false;
         }
     }
+
     public GetEmployeeDTO getEmployee(Long em_id) {
         String url = "http://localhost:8081/api/employees/" + em_id;
         try {
@@ -34,4 +36,7 @@ public class EmployeeEntity {
 
     }
 
+    public List<GetEmployeeDTO> getEmployees(List<Long> employeeIds) {
+        return employeeIds.stream().map(this::getEmployee).toList();
+    }
 }
