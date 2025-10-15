@@ -1,7 +1,10 @@
 package de.szut.lf8_starter.project;
 
+import de.szut.lf8_starter.employee.EmployeeService;
+import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
 import de.szut.lf8_starter.hello.HelloRepository;
+import de.szut.lf8_starter.project.dto.GetEmployeesInProjectDTO;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,12 @@ import java.util.Optional;
 public class ProjectService {
 
     private final ProjectRepository repository;
+    private final EmployeeService employeeService;
 
-    public ProjectService(ProjectRepository repository) {
+    public ProjectService(ProjectRepository repository, EmployeeService employeeService) {
 
         this.repository = repository;
+        this.employeeService = employeeService;
     }
 
     public ProjectEntity create(ProjectEntity newProject) {
