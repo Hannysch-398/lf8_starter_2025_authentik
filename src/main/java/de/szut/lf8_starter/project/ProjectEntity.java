@@ -26,6 +26,10 @@ public class ProjectEntity {
     @Column(name = "ma_id", nullable = false)
     private Long em_Id;
 
+    // Name von dem Projekt
+    @Column(name = "projectName", nullable = false)
+    private String projectName;
+
     // Kunden-ID
     @Column(name = "ku_id", nullable = false)
     private Long cu_Id;
