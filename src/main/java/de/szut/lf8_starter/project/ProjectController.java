@@ -40,7 +40,9 @@ public class ProjectController {
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto,
+                                                                  @RequestHeader("Authorization")
+                                                                  String authorization) {
 
 
         ProjectEntity newProject = this.service.create(dto, authorization);
@@ -48,6 +50,7 @@ public class ProjectController {
         CreateProjectResponseDTO response = new CreateProjectResponseDTO(newProject.getId(), "created");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
 
     }
 
@@ -72,7 +75,8 @@ public class ProjectController {
 
     @GetMapping("/{id}/employees")
     public ResponseEntity<List<GetEmployeesInProjectDTO>> findAllEmployeesInProject(@PathVariable final long id,
-                                                                                    @RequestHeader String authorization) {
+                                                                                    @RequestHeader
+                                                                                    String authorization) {
         //Projekt wird aus dem Projektservice geholt
         var project = this.service.readByID(id);
 
@@ -88,7 +92,7 @@ public class ProjectController {
             return ResponseEntity.ok(Collections.emptyList());
         }
 
-        var employees = this.employeeService.getEmployees(employeeIDs,authorization);
+        var employees = this.employeeService.getEmployees(employeeIDs, authorization);
         System.out.println(employees);
 
         var dtoList = employees.stream().map(employeeMapper::mapEmployeeToGetEmployeesInProjectDTO).toList();
@@ -96,4 +100,19 @@ public class ProjectController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
 
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> delete(@PathVariable final long id) {
+        if (this.service.readByID(id) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        //TODO: Abfrage ob Mitarbeiter noch in dem Projekt sind
+        //   if(this.service.readByID(id).getEmployees()!= null){
+        //     return new ResponseEntity<>(HttpStatus.CONFLICT);
+        //}
+        this.service.delete(id);
+        return new ResponseEntity<>(id, HttpStatus.NO_CONTENT);
+    }
 }
+
