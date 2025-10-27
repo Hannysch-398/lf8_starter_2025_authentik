@@ -31,22 +31,22 @@ public class ProjectController {
         this.service = service;
         this.mapper = mapper;
     }
+
     /**
      * POST /api/projects
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<ProjectCreateDTO> createProject(
+    public ResponseEntity<GetProjectDTO> createProject(
             @Valid @RequestBody ProjectCreateDTO dto) {
 
-        ProjectEntity newProject = this.mapper.mapAddProjectDtoToProject(dto);
-        newProject = this.service.create(newProject);
+        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
         final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
-        return new ResponseEntity(response, HttpStatus.CREATED);
-
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
 
 
     }
+
     @GetMapping
     public ResponseEntity<List<GetProjectDTO>> getAllProjects() {
         List<ProjectEntity> all = this.service.readAll();
@@ -75,15 +75,17 @@ public class ProjectController {
         }
 
 
-        var employees = project.getEmployees();
-        List<GetEmployeeDTO> dtoList = new LinkedList<>();
+//        var employees = project.getEmployees();
+//        List<GetEmployeeDTO> dtoList = new LinkedList<>();
+//
+//        for (EmployeeEntity employee : employees) {
+//            dtoList.add(this.mapper.mapEmployeeToGetEmployeeDTO(employee));
+//        }
+//
+//        return ResponseEntity.ok(dtoList);
+//    }
 
-        for (EmployeeEntity employee : employees) {
-            dtoList.add(this.mapper.mapEmployeeToGetEmployeeDTO(employee));
-        }
 
-        return ResponseEntity.ok(dtoList);
+        return null;
     }
-
-
 }
