@@ -31,13 +31,13 @@ public class ProjectController {
         this.service = service;
         this.mapper = mapper;
     }
+
     /**
      * POST /api/projects
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<ProjectCreateDTO> createProject(
-            @Valid @RequestBody ProjectCreateDTO dto) {
+    public ResponseEntity<ProjectCreateDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto) {
 
         ProjectEntity newProject = this.mapper.mapAddProjectDtoToProject(dto);
         newProject = this.service.create(newProject);
@@ -45,8 +45,8 @@ public class ProjectController {
         return new ResponseEntity(response, HttpStatus.CREATED);
 
 
-
     }
+
     @GetMapping
     public ResponseEntity<List<GetProjectDTO>> getAllProjects() {
         List<ProjectEntity> all = this.service.readAll();
@@ -83,6 +83,20 @@ public class ProjectController {
         }
 
         return ResponseEntity.ok(dtoList);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> delete(@PathVariable final long id) {
+        if (this.service.readByID(id) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        //TODO: Abfrage ob Mitarbeiter noch in dem Projekt sind
+        //   if(this.service.readByID(id).getEmployees()!= null){
+        //     return new ResponseEntity<>(HttpStatus.CONFLICT);
+        //}
+        this.service.delete(id);
+        return new ResponseEntity<>(id, HttpStatus.NO_CONTENT);
     }
 
 

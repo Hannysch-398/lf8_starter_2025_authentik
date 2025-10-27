@@ -38,4 +38,9 @@ public class ProjectService {
         return oProject.get();
 
     }
+
+    public void delete(long id) {
+        ProjectEntity entityToDelete = readByID(id);
+        repository.delete(entityToDelete);
+    }
 }
