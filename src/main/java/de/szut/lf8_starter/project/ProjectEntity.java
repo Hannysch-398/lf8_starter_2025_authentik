@@ -19,23 +19,23 @@ public class ProjectEntity {
     private Long id;
 
     // Mitarbeiter-ID
-    @Column(name = "ma_id", nullable = false)
+    @Column(name = "emId", nullable = false)
     private Long emId;
 
     // Kunden-ID
-    @Column(name = "cu_id", nullable = false)
+    @Column(name = "cuId", nullable = false)
     private Long cuId;
 
-    @Column(name = "cu_name", nullable = false)
+    @Column(name = "cuName", nullable = false)
     private String cuName;
 
     @Column(name = "projectgoal", nullable = false)
     private String projectgoal;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "startDate", nullable = false)
     private LocalDate startDate; // Projektbeginn
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "endDate", nullable = false)
     private LocalDate endDate; // Projektende
 
    /* @ManyToOne(fetch = FetchType.LAZY)

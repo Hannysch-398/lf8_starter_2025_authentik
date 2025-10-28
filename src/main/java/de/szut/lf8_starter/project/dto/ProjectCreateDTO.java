@@ -10,14 +10,14 @@ import java.time.LocalDate;
 public class ProjectCreateDTO {
 
     @NotNull(message = "Employee-ID is mandatory")
-    private Long ma_id;
+    private Long em_id;
 
     @NotNull(message = "Customer-ID is mandatory")
-    private Long ku_id;
+    private Long cu_id;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 50, message = "Customer name must not exceed 50 characters")
-    private String ku_name;
+    private String cu_name;
 
     @NotBlank(message = "Projectgoal is mandatory")
     private String projectgoal;
