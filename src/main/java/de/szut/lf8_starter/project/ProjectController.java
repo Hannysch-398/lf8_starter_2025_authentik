@@ -3,9 +3,11 @@ package de.szut.lf8_starter.project;
 
 import de.szut.lf8_starter.employee.EmployeeEntity;
 import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
+import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
 import de.szut.lf8_starter.hello.HelloEntity;
 import de.szut.lf8_starter.hello.dto.HelloCreateDto;
 import de.szut.lf8_starter.hello.dto.HelloGetDto;
+import de.szut.lf8_starter.project.dto.CreateProjectResponseDTO;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/lf8_starter/projects")
@@ -37,13 +40,22 @@ public class ProjectController {
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<GetProjectDTO> createProject(
+    public ResponseEntity<CreateProjectResponseDTO> createProject(
             @Valid @RequestBody ProjectCreateDTO dto) {
 
-        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
-        final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
+//        final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
+//       return new ResponseEntity<>(response, HttpStatus.CREATED);
 
+
+        ProjectEntity newProject = service.create(dto);
+
+        CreateProjectResponseDTO response = new CreateProjectResponseDTO(
+                newProject.getId(),
+                "created"
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
 
