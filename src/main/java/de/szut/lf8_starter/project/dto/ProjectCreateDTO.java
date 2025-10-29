@@ -10,21 +10,21 @@ import java.time.LocalDate;
 public class ProjectCreateDTO {
 
     @NotNull(message = "Employee-ID is mandatory")
-    private Long em_id;
+    private Long emId;
 
     @NotNull(message = "Customer-ID is mandatory")
-    private Long cu_id;
+    private Long cuId;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 50, message = "Customer name must not exceed 50 characters")
-    private String cu_name;
+    private String CuName;
 
     @NotBlank(message = "Projectgoal is mandatory")
     private String projectgoal;
 
     @NotNull(message = "Start date is mandatory")
-    private LocalDate start_date;
+    private LocalDate startDate;
 
     @NotNull(message = "End date is mandatory")
-    private LocalDate end_date;
+    private LocalDate endDate;
 }

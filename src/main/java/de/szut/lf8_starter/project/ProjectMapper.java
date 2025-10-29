@@ -12,12 +12,12 @@ public class ProjectMapper {
 
     public ProjectEntity mapAddProjectDtoToProject(ProjectCreateDTO dto){
         ProjectEntity newProject = new ProjectEntity();
-        newProject.setEmId(dto.getEm_id());
-        newProject.setCuId(dto.getCu_id());
-        newProject.setCuName(dto.getCu_name());
+        newProject.setEmId(dto.getEmId());
+        newProject.setCuId(dto.getCuId());
+        newProject.setCuName(dto.getCuName());
         newProject.setProjectgoal(dto.getProjectgoal());
-        newProject.setStartDate(dto.getStart_date());
-        newProject.setEndDate(dto.getEnd_date());
+        newProject.setStartDate(dto.getStartDate());
+        newProject.setEndDate(dto.getEndDate());
 
         return newProject;
     }
@@ -25,9 +25,9 @@ public class ProjectMapper {
     public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity entity) {
         GetProjectDTO dto = new GetProjectDTO();
         dto.setId(entity.getId());
-        dto.setMaId(entity.getEmId());
-        dto.setKuId(entity.getCuId());
-        dto.setKuName(entity.getCuName());
+        dto.setEmId(entity.getEmId());
+        dto.setCuId(entity.getCuId());
+        dto.setCuName(entity.getCuName());
         dto.setProjectgoal(entity.getProjectgoal());
         dto.setStartDate(entity.getStartDate());
         dto.setEndDate(entity.getEndDate());

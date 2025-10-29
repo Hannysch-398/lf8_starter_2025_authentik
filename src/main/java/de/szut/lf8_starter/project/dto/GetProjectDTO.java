@@ -7,9 +7,9 @@ import java.time.LocalDate;
 @Data
 public class GetProjectDTO {
     private Long id;
-    private Long maId;        // Mitarbeiter-ID
-    private Long kuId;        // Kunden-ID
-    private String kuName;    // Kundenname
+    private Long EmId;        // Mitarbeiter-ID
+    private Long CuId;        // Kunden-ID
+    private String CuName;    // Kundenname
     private String projectgoal;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -17,9 +17,9 @@ public class GetProjectDTO {
     public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
         GetProjectDTO dto = new GetProjectDTO();
         dto.setId(project.getId());
-        dto.setMaId(project.getEmId());
-        dto.setKuId(project.getCuId());
-        dto.setKuName(project.getCuName());
+        dto.setEmId(project.getEmId());
+        dto.setCuId(project.getCuId());
+        dto.setCuName(project.getCuName());
         dto.setProjectgoal(project.getProjectgoal());
         dto.setStartDate(project.getStartDate());
         dto.setEndDate(project.getEndDate());
