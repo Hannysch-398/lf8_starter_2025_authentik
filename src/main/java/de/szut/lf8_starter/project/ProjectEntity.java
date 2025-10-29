@@ -28,7 +28,7 @@ public class ProjectEntity {
     private Long emId;
 
     // Name von dem Projekt
-    @Column(name = "projectName", nullable = false)
+    @Column(name = "project_name", nullable = false)
     private String projectName;
 
     // Kunden-ID

@@ -16,6 +16,9 @@ public class ProjectCreateDTO {
     @NotNull(message = "Customer-ID is mandatory")
     private Long cuId;
 
+    @NotBlank(message = "Project name is mandatory")
+    private String projectName;
+
     @NotBlank(message = "Name is mandatory")
     @Size(max = 50, message = "Customer name must not exceed 50 characters")
     private String cuName;

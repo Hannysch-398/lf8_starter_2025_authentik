@@ -2,6 +2,7 @@ package de.szut.lf8_starter.project.dto;
 
 import de.szut.lf8_starter.project.ProjectEntity;
 import lombok.Data;
+
 import java.util.List;
 import java.time.LocalDate;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 public class GetProjectDTO {
     private Long id;
     private Long emId;        // Mitarbeiter-ID
+    private String projectName;
     private Long cuId;        // Kunden-ID
     private String cuName;    // Kundenname
     private String projectgoal;
@@ -16,10 +18,12 @@ public class GetProjectDTO {
     private LocalDate endDate;
     private List<Long> employeeIds;
 
+    /*
     public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
         GetProjectDTO dto = new GetProjectDTO();
         dto.setId(project.getId());
         dto.setEmId(project.getEmId());
+        dto.setProjectName(project.getProjectName());
         dto.setCuId(project.getCuId());
         dto.setCuName(project.getCuName());
         dto.setProjectgoal(project.getProjectgoal());
@@ -27,6 +31,6 @@ public class GetProjectDTO {
         dto.setEndDate(project.getEndDate());
         dto.setEmployeeIds(project.getEmployeeIds());
         return dto;
-    }
+    }*/
 
 }

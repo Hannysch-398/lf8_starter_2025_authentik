@@ -30,7 +30,8 @@ public class ProjectService {
 
     private final EmployeeService employeeService;
 
-    public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,EmployeeService employeeService) {
+    public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,
+                          EmployeeService employeeService) {
         this.repository = repository;
         this.mapper = mapper;
         this.restTemplate = restTemplate;
@@ -52,6 +53,9 @@ public class ProjectService {
         if (dto.getStartDate() == null || dto.getEndDate() == null) {
             throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
         }
+        if (dto.getProjectName() == null) {
+            throw new BadRequestException("Projektname muss angegeben werden");
+        }
 
         // Employee und Kunde prüfen
         verifyEmployeeExists(dto.getEmId());
@@ -63,7 +67,7 @@ public class ProjectService {
 //            throw new EmployeeConflictException("Mitarbeiter ist bereits in einem anderen Projekt verantwortlich");
 //        }
 
-        ProjectEntity entity = mapper.mapAddProjectDtoToProject(dto);
+        ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
 
         // Datumsvalidierung
         if (entity.getEndDate().isBefore(entity.getStartDate())) {
@@ -74,12 +78,9 @@ public class ProjectService {
             throw new BadRequestException("Projektziel darf nicht leer sein");
         }
 
-        // Speichern
-        //return repository.save(entity);
-      // ProjectEntity savedEntity = repository.save(entity);
+        // ProjectEntity savedEntity = repository.save(entity);
 
 
-       // return repository.save(entity);
         return repository.save(entity);
     }
 
