@@ -16,7 +16,7 @@ public class EmployeeMapper {
     public GetEmployeesInProjectDTO mapEmployeeToGetEmployeesInProjectDTO(GetEmployeeDTO employee) {
 
         GetEmployeesInProjectDTO employeesInProjectDTO =
-                new GetEmployeesInProjectDTO(employee.getEm_id(), employee.getSkill());
+                new GetEmployeesInProjectDTO(employee.getEmId(), employee.getSkill());
 
         return employeesInProjectDTO;
     }

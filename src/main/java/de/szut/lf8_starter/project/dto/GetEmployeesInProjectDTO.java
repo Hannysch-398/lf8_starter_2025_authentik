@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class GetEmployeesInProjectDTO {
-    private Long em_id;
+    private Long emId;
     private List<SkillDTO> skillSet;
 }
