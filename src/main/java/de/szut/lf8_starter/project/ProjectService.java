@@ -64,11 +64,11 @@ public class ProjectService {
 
         // Speichern
         //return repository.save(entity);
-       ProjectEntity savedEntity = repository.save(entity);
+      // ProjectEntity savedEntity = repository.save(entity);
 
 
        // return repository.save(entity);
-        return savedEntity;
+        return repository.save(entity);
     }
 
     public List<ProjectEntity> readAll() {
