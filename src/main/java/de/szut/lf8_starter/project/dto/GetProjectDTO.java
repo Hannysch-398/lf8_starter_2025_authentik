@@ -1,3 +1,4 @@
+
 package de.szut.lf8_starter.project.dto;
 
 import de.szut.lf8_starter.project.ProjectEntity;
@@ -34,3 +35,4 @@ public class GetProjectDTO {
     }*/
 
 }
+

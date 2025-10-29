@@ -3,6 +3,7 @@ package de.szut.lf8_starter.project;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import org.springframework.http.HttpStatus;
+
 import de.szut.lf8_starter.employee.EmployeeService;
 import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
@@ -21,14 +22,15 @@ import java.util.Optional;
 public class ProjectService {
 
     private final ProjectRepository repository;
+    private final EmployeeService employeeService;
 
     private final ProjectMapper mapper;
     private final RestTemplate restTemplate;
 
+
     private static final String EMPLOYEE_SERVICE_URL = "http://employee-api.szut.dev/employees";
     private static final String CUSTOMER_SERVICE_URL = "http://customer-api.szut.dev/customers";
 
-    private final EmployeeService employeeService;
 
     public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,
                           EmployeeService employeeService) {

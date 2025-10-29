@@ -6,7 +6,7 @@ import java.util.ArrayList;
 @Data
 public class GetEmployeeDTO {
 
-    private Long em_id;
+    private Long emId;
     private String lastName;
     private String firstName;
     private String postcode;

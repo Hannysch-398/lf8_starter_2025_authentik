@@ -1,15 +1,10 @@
 package de.szut.lf8_starter.project;
 
-import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
-import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
-import de.szut.lf8_starter.hello.HelloEntity;
-import de.szut.lf8_starter.hello.dto.HelloCreateDto;
-import de.szut.lf8_starter.hello.dto.HelloGetDto;
+
 import de.szut.lf8_starter.project.dto.CreateProjectResponseDTO;
 import de.szut.lf8_starter.employee.EmployeeMapper;
 import de.szut.lf8_starter.employee.EmployeeService;
 import de.szut.lf8_starter.project.dto.GetEmployeesInProjectDTO;
-
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
 import jakarta.validation.Valid;
@@ -47,6 +42,7 @@ public class ProjectController {
      */
     @PostMapping
     public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto) {
+
 
 //        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
 //        final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
@@ -96,6 +92,7 @@ public class ProjectController {
         }
 
         var employees = this.employeeService.getEmployees(employeeIDs);
+
 
         var dtoList = employees.stream().map(employeeMapper::mapEmployeeToGetEmployeesInProjectDTO).toList();
 

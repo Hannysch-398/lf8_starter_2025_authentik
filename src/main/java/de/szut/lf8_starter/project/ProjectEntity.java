@@ -22,7 +22,6 @@ public class ProjectEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     // Mitarbeiter-ID
     @Column(name = "emId", nullable = false)
     private Long emId;
@@ -43,9 +42,10 @@ public class ProjectEntity {
 
     @Column(name = "startDate", nullable = false)
     private LocalDate startDate; // Projektbeginn
-
+    
     @Column(name = "endDate", nullable = false)
     private LocalDate endDate; // Projektende
+
 
    /*
    @ManyToOne(fetch = FetchType.LAZY)
