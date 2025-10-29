@@ -11,13 +11,26 @@ import org.springframework.stereotype.Service;
 public class ProjectMapper {
 
     public ProjectEntity mapAddProjectDtoToProject(ProjectCreateDTO dto){
-        ProjectEntity newSupplier = new ProjectEntity();
+        ProjectEntity newProject = new ProjectEntity();
+        newProject.setEmId(dto.getEmId());
+        newProject.setCuId(dto.getCuId());
+        newProject.setCuName(dto.getCuName());
+        newProject.setProjectgoal(dto.getProjectgoal());
+        newProject.setStartDate(dto.getStartDate());
+        newProject.setEndDate(dto.getEndDate());
 
-        return null;
+        return newProject;
     }
 
-    public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
+    public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity entity) {
         GetProjectDTO dto = new GetProjectDTO();
+        dto.setId(entity.getId());
+        dto.setEmId(entity.getEmId());
+        dto.setCuId(entity.getCuId());
+        dto.setCuName(entity.getCuName());
+        dto.setProjectgoal(entity.getProjectgoal());
+        dto.setStartDate(entity.getStartDate());
+        dto.setEndDate(entity.getEndDate());
         return dto;
     }
 
