@@ -28,23 +28,23 @@ public class ProjectService {
 
     public ProjectEntity create(ProjectCreateDTO dto) {
         // Pflichtfelder prüfen
-        if (dto.getEm_id() == null) {
+        if (dto.getEmId() == null) {
             throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
         }
-        if (dto.getCu_id() == null) {
+        if (dto.getCuId() == null) {
             throw new BadRequestException("Kunden-ID darf nicht null sein");
         }
-        if (dto.getCu_name() == null || dto.getCu_name().isBlank()) {
+        if (dto.getCuName() == null || dto.getCuName().isBlank()) {
             throw new BadRequestException("Kundenansprechpartner (ku_name) darf nicht leer sein");
         }
-        if (dto.getStart_date() == null || dto.getEnd_date() == null) {
+        if (dto.getStartDate() == null || dto.getEndDate() == null) {
             throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
         }
 
         // Employee und Kunde prüfen
-        verifyEmployeeExists(dto.getEm_id());
-        verifyCustomerExists(dto.getCu_id());
-        checkEmployeeAlreadyAssigned(dto.getEm_id());
+        verifyEmployeeExists(dto.getEmId());
+        verifyCustomerExists(dto.getCuId());
+        checkEmployeeAlreadyAssigned(dto.getEmId());
 
         // Konflikte prüfen
 //        if (isEmployeeAlreadyAssigned(dto.getEm_id())) {
