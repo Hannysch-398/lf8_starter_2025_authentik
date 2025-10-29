@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ProjectCreateDTO {
@@ -14,6 +15,9 @@ public class ProjectCreateDTO {
 
     @NotNull(message = "Customer-ID is mandatory")
     private Long cuId;
+
+    @NotBlank(message = "Project name is mandatory")
+    private String projectName;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 50, message = "Customer name must not exceed 50 characters")
@@ -27,4 +31,6 @@ public class ProjectCreateDTO {
 
     @NotNull(message = "End date is mandatory")
     private LocalDate endDate;
+
+    private List<Long> employeeIds;
 }

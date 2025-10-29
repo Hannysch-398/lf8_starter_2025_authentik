@@ -1,23 +1,19 @@
 package de.szut.lf8_starter.project;
 
 
-import de.szut.lf8_starter.employee.EmployeeEntity;
-import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
-import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
-import de.szut.lf8_starter.hello.HelloEntity;
-import de.szut.lf8_starter.hello.dto.HelloCreateDto;
-import de.szut.lf8_starter.hello.dto.HelloGetDto;
 import de.szut.lf8_starter.project.dto.CreateProjectResponseDTO;
+import de.szut.lf8_starter.employee.EmployeeMapper;
+import de.szut.lf8_starter.employee.EmployeeService;
+import de.szut.lf8_starter.project.dto.GetEmployeesInProjectDTO;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +25,15 @@ public class ProjectController {
 
     private final ProjectService service;
     private final ProjectMapper mapper;
+    private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
-    public ProjectController(ProjectService service, ProjectMapper mapper) {
+    public ProjectController(ProjectService service, ProjectMapper mapper, EmployeeService employeeService,
+                             EmployeeMapper employeeMapper) {
         this.service = service;
         this.mapper = mapper;
+        this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
 
     /**
@@ -40,20 +41,16 @@ public class ProjectController {
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<CreateProjectResponseDTO> createProject(
-            @Valid @RequestBody ProjectCreateDTO dto) {
+    public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto) {
+
 
 //        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
 //        final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
 //       return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-
         ProjectEntity newProject = service.create(dto);
 
-        CreateProjectResponseDTO response = new CreateProjectResponseDTO(
-                newProject.getId(),
-                "created"
-        );
+        CreateProjectResponseDTO response = new CreateProjectResponseDTO(newProject.getId(), "created");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -78,26 +75,28 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/employees")
-    public ResponseEntity<List<GetEmployeeDTO>> findAllEmployeesInProject(@PathVariable final long id) {
-
+    public ResponseEntity<List<GetEmployeesInProjectDTO>> findAllEmployeesInProject(@PathVariable final long id) {
+        //Projekt wird aus dem Projektservice geholt
         var project = this.service.readByID(id);
 
+        //Es wird geguckt ob das Projekt überhaupt existiert das angefordert wurde
         if (project == null) {
             return ResponseEntity.notFound().build();
         }
 
 
-//        var employees = project.getEmployees();
-//        List<GetEmployeeDTO> dtoList = new LinkedList<>();
-//
-//        for (EmployeeEntity employee : employees) {
-//            dtoList.add(this.mapper.mapEmployeeToGetEmployeeDTO(employee));
-//        }
-//
-//        return ResponseEntity.ok(dtoList);
-//    }
+        //Von dem Projekt werden die MitarbeiterIDs ausgelesesn als ArrayList
+        var employeeIDs = project.getEmployeeIds();
+        if (employeeIDs == null || employeeIDs.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        var employees = this.employeeService.getEmployees(employeeIDs);
 
 
-        return null;
+        var dtoList = employees.stream().map(employeeMapper::mapEmployeeToGetEmployeesInProjectDTO).toList();
+
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
+
     }
 }

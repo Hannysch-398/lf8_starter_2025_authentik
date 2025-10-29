@@ -3,6 +3,14 @@ package de.szut.lf8_starter.project;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import org.springframework.http.HttpStatus;
+
+import de.szut.lf8_starter.employee.EmployeeService;
+import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
+import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
+import de.szut.lf8_starter.hello.HelloRepository;
+import de.szut.lf8_starter.project.dto.GetEmployeesInProjectDTO;
+import org.springframework.stereotype.Repository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -14,16 +22,23 @@ import java.util.Optional;
 public class ProjectService {
 
     private final ProjectRepository repository;
+    private final EmployeeService employeeService;
+
     private final ProjectMapper mapper;
     private final RestTemplate restTemplate;
+
 
     private static final String EMPLOYEE_SERVICE_URL = "http://employee-api.szut.dev/employees";
     private static final String CUSTOMER_SERVICE_URL = "http://customer-api.szut.dev/customers";
 
-    public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate) {
+
+    public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,
+                          EmployeeService employeeService) {
         this.repository = repository;
         this.mapper = mapper;
         this.restTemplate = restTemplate;
+        this.employeeService = employeeService;
+
     }
 
     public ProjectEntity create(ProjectCreateDTO dto) {
@@ -40,6 +55,9 @@ public class ProjectService {
         if (dto.getStartDate() == null || dto.getEndDate() == null) {
             throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
         }
+        if (dto.getProjectName() == null) {
+            throw new BadRequestException("Projektname muss angegeben werden");
+        }
 
         // Employee und Kunde prüfen
         verifyEmployeeExists(dto.getEmId());
@@ -51,7 +69,7 @@ public class ProjectService {
 //            throw new EmployeeConflictException("Mitarbeiter ist bereits in einem anderen Projekt verantwortlich");
 //        }
 
-        ProjectEntity entity = mapper.mapAddProjectDtoToProject(dto);
+        ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
 
         // Datumsvalidierung
         if (entity.getEndDate().isBefore(entity.getStartDate())) {
@@ -62,12 +80,9 @@ public class ProjectService {
             throw new BadRequestException("Projektziel darf nicht leer sein");
         }
 
-        // Speichern
-        //return repository.save(entity);
-      // ProjectEntity savedEntity = repository.save(entity);
+        // ProjectEntity savedEntity = repository.save(entity);
 
 
-       // return repository.save(entity);
         return repository.save(entity);
     }
 
