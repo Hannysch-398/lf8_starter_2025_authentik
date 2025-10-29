@@ -7,9 +7,9 @@ import java.time.LocalDate;
 @Data
 public class GetProjectDTO {
     private Long id;
-    private Long EmId;        // Mitarbeiter-ID
-    private Long CuId;        // Kunden-ID
-    private String CuName;    // Kundenname
+    private Long emId;        // Mitarbeiter-ID
+    private Long cuId;        // Kunden-ID
+    private String cuName;    // Kundenname
     private String projectgoal;
     private LocalDate startDate;
     private LocalDate endDate;
