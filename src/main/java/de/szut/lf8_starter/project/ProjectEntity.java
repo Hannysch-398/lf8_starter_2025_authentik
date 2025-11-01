@@ -1,5 +1,6 @@
 package de.szut.lf8_starter.project;
 
+import de.szut.lf8_starter.employee.EmployeeAssignment;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,9 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -46,26 +45,14 @@ public class ProjectEntity {
     @Column(name = "endDate", nullable = false)
     private LocalDate endDate; // Projektende
 
+    @Column(name = "actual_end_date")
+    private LocalDate actualEndDate;
 
-   /*
-   @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    private EmployeeEntity employee;
-  */
-
-/*   } @OneToMany(mappedBy = "project")
-   private List<EmployeeEntity> employees;
-
-   public List<EmployeeEntity> getEmployees(){
-        return employees;
-}
-*/
 
     // Liste der Mitarbeiter-IDs
     @ElementCollection
     @CollectionTable(name = "project_employee", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "employee_id")
-    private List<Long> employeeIds = new ArrayList<>();
+    private List<EmployeeAssignment> employeeAssignment;
 
 
 }

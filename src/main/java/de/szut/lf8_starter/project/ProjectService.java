@@ -1,15 +1,12 @@
 package de.szut.lf8_starter.project;
 
+import de.szut.lf8_starter.employee.EmployeeAssignment;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import org.springframework.http.HttpStatus;
 
 import de.szut.lf8_starter.employee.EmployeeService;
-import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
-import de.szut.lf8_starter.hello.HelloRepository;
-import de.szut.lf8_starter.project.dto.GetEmployeesInProjectDTO;
-import org.springframework.stereotype.Repository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -41,7 +38,7 @@ public class ProjectService {
 
     }
 
-    public ProjectEntity create(ProjectCreateDTO dto) {
+    public ProjectEntity create(ProjectCreateDTO dto, String authorization) {
         // Pflichtfelder prüfen
         if (dto.getEmId() == null) {
             throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
@@ -59,6 +56,8 @@ public class ProjectService {
             throw new BadRequestException("Projektname muss angegeben werden");
         }
 
+//        boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
+
         // Employee und Kunde prüfen
         verifyEmployeeExists(dto.getEmId());
         verifyCustomerExists(dto.getCuId());
@@ -75,6 +74,24 @@ public class ProjectService {
         if (entity.getEndDate().isBefore(entity.getStartDate())) {
             throw new InvalidProjectDateException("Enddatum darf nicht vor Startdatum liegen.");
         }
+
+        if (dto.getEmployeeAssignment() != null && !dto.getEmployeeAssignment().isEmpty()) {
+            List<EmployeeAssignment> assignments = dto.getEmployeeAssignment().stream()
+                    .map(a -> {
+                        boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
+                        if (!hasSkill) {
+                            throw new BadRequestException("Mitarbeiter " + a.getEmployeeId() +
+                                    " besitzt Skill " + a.getSkillId() + " nicht.");
+                        }
+                        return new EmployeeAssignment(a.getEmployeeId(), a.getSkillId());
+                    })
+                    .toList();
+            dto.getEmployeeAssignment().forEach(a -> {
+                System.out.println("Employee " + a.getEmployeeId() + " Skill " + a.getSkillId());
+            });
+            entity.setEmployeeAssignment(assignments);
+        }
+
         //goal checken
         if (dto.getProjectgoal() == null || dto.getProjectgoal().isBlank()) {
             throw new BadRequestException("Projektziel darf nicht leer sein");

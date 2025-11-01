@@ -38,23 +38,29 @@ public class EmployeeController {
 
         //alle Projekte auf Mitarbeiter filtern
         List<ProjectEntity> projectOfEmployee = List.of();
-
         for (ProjectEntity project : allProjects) {
-            var employeesOfProject = project.getEmployeeIds();
-            for (Long id : employeesOfProject) {
-                if (id == employeeId) {
-                    projectOfEmployee.add(project);
+            var assignments = project.getEmployeeAssignment() ;// <-- neue Feldbezeichnung
+
+            if (assignments != null) {
+                for (var assignment : assignments) {
+                    if (assignment.getEmployeeId() == employeeId) {
+                        projectOfEmployee.add(project);
+                        //       for (ProjectEntity project : allProjects) {
+
+//            var employeesOfProject = project.getEmployeeIds();
+//            for (Long id : employeesOfProject) {
+//                if (id == employeeId) {
+//                    projectOfEmployee.add(project);
+
+                    }
                 }
             }
-        }
 
+
+        }
         var dtoList = employeeMapper.mapProjectEntityToGetAllProjectsOfEmployeeDTO(projectOfEmployee);
 
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
+
     }
-
-
-
-
-
 }
