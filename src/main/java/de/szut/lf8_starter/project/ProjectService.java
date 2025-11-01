@@ -24,7 +24,7 @@ public class ProjectService {
     private final ProjectMapper mapper;
     private final RestTemplate restTemplate;
 
-    private static final String CUSTOMER_SERVICE_URL = "https://customer-api.szut.dev/customers";
+    private static final String CUSTOMER_SERVICE_URL = "http://customer-api.szut.dev/customers";
 
 
     public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,

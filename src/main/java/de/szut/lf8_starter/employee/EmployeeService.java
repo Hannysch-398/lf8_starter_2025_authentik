@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class EmployeeService {
     private final RestTemplate restTemplate;
 //    @Value("${employee.service.url}")
 private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.dev/employees";
+    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
 
     public EmployeeService(RestTemplate restTemplate) {
@@ -131,9 +135,8 @@ public GetEmployeeDTO getEmployee(Long emId, String authorization) {
         } catch (HttpClientErrorException.NotFound nf) {
             System.err.println("employeeHasSkill -> Mitarbeiter nicht gefunden: " + employeeId);
             return false;
-        } catch (Exception e) {
-            System.err.println("employeeHasSkill -> Fehler beim Prüfen des Mitarbeiters " + employeeId + ": " + e.getMessage());
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("employeeHasSkill -> Fehler beim Prüfen des Mitarbeiters " + employeeId + ": " + e.getMessage());
             return false;
         }
     }
