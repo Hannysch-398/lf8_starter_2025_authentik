@@ -1,7 +1,7 @@
 
 package de.szut.lf8_starter.project.dto;
 
-import de.szut.lf8_starter.project.ProjectEntity;
+import de.szut.lf8_starter.employee.EmployeeAssignment;
 import lombok.Data;
 
 import java.util.List;
@@ -17,7 +17,9 @@ public class GetProjectDTO {
     private String projectgoal;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<Long> employeeIds;
+    private LocalDate actualEndDate;
+    private List<EmployeeAssignment> employeeAssignment;
+
 
     /*
     public GetProjectDTO mapProjectToGetProjectDTO(ProjectEntity project) {
