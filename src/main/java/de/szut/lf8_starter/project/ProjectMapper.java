@@ -56,8 +56,4 @@ public class ProjectMapper {
         return dto;
     }
 
-    public GetEmployeeDTO mapEmployeeToGetEmployeeSkillsDTO() {
-        GetEmployeeDTO dto = new GetEmployeeDTO();
-        return dto;
-    }
 }

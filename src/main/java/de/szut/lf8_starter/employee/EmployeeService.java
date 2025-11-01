@@ -19,14 +19,15 @@ import java.util.List;
 public class EmployeeService {
     private final RestTemplate restTemplate;
 //    @Value("${employee.service.url}")
-    private String employeeServiceUrl = "https://employee-api.szut.dev/employees";
+private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.dev/employees";
+
 
     public EmployeeService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public boolean employeeExists(Long emId) {
-        String url = employeeServiceUrl + emId;
+        String url = EMPLOYEE_SERVICE_URL + emId;
         try {
             restTemplate.getForObject(url, Object.class);
             return true;
@@ -78,7 +79,7 @@ public GetEmployeeDTO getEmployee(Long emId, String authorization) {
 
 
     public boolean employeeHasSkill(Long employeeId, Long skillId, String authorization) {
-        String url = employeeServiceUrl + "/" + employeeId;
+        String url = EMPLOYEE_SERVICE_URL + "/" + employeeId;
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
         if (authorization != null && !authorization.isBlank()) {

@@ -21,7 +21,7 @@ public class EmployeeMapper {
 //        return employeesInProjectDTO;
         Long skillId = null;
         if (employee.getSkillset() != null && !employee.getSkillset().isEmpty()) {
-            skillId = employee.getSkillset().get(0).getId(); // SkillDTO hat vermutlich getId()
+            skillId = employee.getSkillset().getFirst().getId(); // SkillDTO hat vermutlich getId()
         }
 
         // DTO erzeugen
