@@ -102,17 +102,22 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@PathVariable final long id) {
-        if (this.service.readByID(id) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        var project = service.readByID(id);
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        //TODO: Abfrage ob Mitarbeiter noch in dem Projekt sind
-        //   if(this.service.readByID(id).getEmployees()!= null){
-        //     return new ResponseEntity<>(HttpStatus.CONFLICT);
-        //}
-        this.service.delete(id);
-        return new ResponseEntity<>(id, HttpStatus.NO_CONTENT);
+        var assignments = project.getEmployeeAssignment();
+        if (assignments != null && !assignments.isEmpty()) {
+            // Mitarbeiter hängen noch am Projekt → 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        service.delete(id);
+        // Erfolgreich gelöscht, kein Body bei 204
+        return ResponseEntity.noContent().build();
     }
+
 }
 
