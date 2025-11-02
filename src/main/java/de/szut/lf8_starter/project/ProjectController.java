@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/lf8_starter/projects")
@@ -41,14 +40,10 @@ public class ProjectController {
      * Nimmt ein ProjectRequestDto entgegen, validiert es und erstellt ein neues Projekt.
      */
     @PostMapping
-    public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto) {
+    public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto, @RequestHeader("Authorization") String authorization) {
 
 
-//        ProjectEntity newProject = this.service.create(dto); // Service wandelt DTO in Entity um
-//        final GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(newProject);
-//       return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-        ProjectEntity newProject = service.create(dto);
+        ProjectEntity newProject = this.service.create(dto, authorization);
 
         CreateProjectResponseDTO response = new CreateProjectResponseDTO(newProject.getId(), "created");
 
@@ -74,8 +69,10 @@ public class ProjectController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}/employees")
-    public ResponseEntity<List<GetEmployeesInProjectDTO>> findAllEmployeesInProject(@PathVariable final long id) {
+    public ResponseEntity<List<GetEmployeesInProjectDTO>> findAllEmployeesInProject(@PathVariable final long id,
+                                                                                    @RequestHeader String authorization) {
         //Projekt wird aus dem Projektservice geholt
         var project = this.service.readByID(id);
 
@@ -86,13 +83,13 @@ public class ProjectController {
 
 
         //Von dem Projekt werden die MitarbeiterIDs ausgelesesn als ArrayList
-        var employeeIDs = project.getEmployeeIds();
+        var employeeIDs = project.getEmployeeAssignment();
         if (employeeIDs == null || employeeIDs.isEmpty()) {
             return ResponseEntity.ok(Collections.emptyList());
         }
 
-        var employees = this.employeeService.getEmployees(employeeIDs);
-
+        var employees = this.employeeService.getEmployees(employeeIDs,authorization);
+        System.out.println(employees);
 
         var dtoList = employees.stream().map(employeeMapper::mapEmployeeToGetEmployeesInProjectDTO).toList();
 

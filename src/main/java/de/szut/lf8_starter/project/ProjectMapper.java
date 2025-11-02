@@ -1,10 +1,13 @@
 package de.szut.lf8_starter.project;
 
 
+import de.szut.lf8_starter.employee.EmployeeAssignment;
 import de.szut.lf8_starter.employee.dto.GetEmployeeDTO;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectMapper {
@@ -19,7 +22,15 @@ public class ProjectMapper {
         newProject.setProjectgoal(dto.getProjectgoal());
         newProject.setStartDate(dto.getStartDate());
         newProject.setEndDate(dto.getEndDate());
-        newProject.setEmployeeIds(dto.getEmployeeIds());
+        newProject.setActualEndDate(dto.getActualEndDate());
+        // DTO → Entity: employeeAssignments umwandeln
+        if (dto.getEmployeeAssignment() != null) {
+            List<EmployeeAssignment> assignments = dto.getEmployeeAssignment().stream()
+                    .map(a -> new EmployeeAssignment(a.getEmployeeId(), a.getSkillId()))
+                    .toList();
+            newProject.setEmployeeAssignment(assignments);
+        }
+
 
         return newProject;
     }
@@ -34,12 +45,15 @@ public class ProjectMapper {
         dto.setProjectgoal(entity.getProjectgoal());
         dto.setStartDate(entity.getStartDate());
         dto.setEndDate(entity.getEndDate());
-        dto.setEmployeeIds(entity.getEmployeeIds());
+        dto.setActualEndDate(entity.getActualEndDate());
+
+        // Entity → DTO: employeeAssignment umwandeln
+        if (entity.getEmployeeAssignment() != null) {
+            dto.setEmployeeAssignment(entity.getEmployeeAssignment().stream()
+                    .map(a -> new EmployeeAssignment(a.getEmployeeId(), a.getSkillId()))
+                    .toList());
+        }
         return dto;
     }
 
-    public GetEmployeeDTO mapEmployeeToGetEmployeeSkillsDTO() {
-        GetEmployeeDTO dto = new GetEmployeeDTO();
-        return dto;
-    }
 }

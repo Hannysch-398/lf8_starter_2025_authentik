@@ -1,5 +1,6 @@
 package de.szut.lf8_starter.project.dto;
 
+import de.szut.lf8_starter.employee.EmployeeAssignment;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.*;
@@ -32,5 +33,8 @@ public class ProjectCreateDTO {
     @NotNull(message = "End date is mandatory")
     private LocalDate endDate;
 
-    private List<Long> employeeIds;
+    private LocalDate actualEndDate;
+
+    private List<EmployeeAssignment> employeeAssignment;
+//private List<Long> employeeIds;
 }

@@ -15,10 +15,18 @@ public class EmployeeMapper {
 
     public GetEmployeesInProjectDTO mapEmployeeToGetEmployeesInProjectDTO(GetEmployeeDTO employee) {
 
-        GetEmployeesInProjectDTO employeesInProjectDTO =
-                new GetEmployeesInProjectDTO(employee.getEmId(), employee.getSkill());
+//        GetEmployeesInProjectDTO employeesInProjectDTO =
+//                new GetEmployeesInProjectDTO(employee.getEmId(), employee.getSkill());
+//
+//        return employeesInProjectDTO;
+        Long skillId = null;
+        if (employee.getSkillset() != null && !employee.getSkillset().isEmpty()) {
+            skillId = employee.getSkillset().getFirst().getId(); // SkillDTO hat vermutlich getId()
+        }
 
-        return employeesInProjectDTO;
+        // DTO erzeugen
+        return new GetEmployeesInProjectDTO(employee.getEmId(), skillId);
+
     }
 
     public List<GetAllProjectsOfEmployeeDTO> mapProjectEntityToGetAllProjectsOfEmployeeDTO(
