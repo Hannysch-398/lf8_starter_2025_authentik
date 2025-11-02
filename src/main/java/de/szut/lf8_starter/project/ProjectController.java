@@ -43,14 +43,11 @@ public class ProjectController {
     public ResponseEntity<CreateProjectResponseDTO> createProject(@Valid @RequestBody ProjectCreateDTO dto,
                                                                   @RequestHeader("Authorization")
                                                                   String authorization) {
-
-
         ProjectEntity newProject = this.service.create(dto, authorization);
 
         CreateProjectResponseDTO response = new CreateProjectResponseDTO(newProject.getId(), "created");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
 
     }
 
@@ -118,6 +115,7 @@ public class ProjectController {
         // Erfolgreich gelöscht, kein Body bei 204
         return ResponseEntity.noContent().build();
     }
+
 
 }
 
