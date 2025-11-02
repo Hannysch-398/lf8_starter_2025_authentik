@@ -15,6 +15,7 @@ public class EmployeeMapper {
 
     public GetEmployeesInProjectDTO mapEmployeeToGetEmployeesInProjectDTO(GetEmployeeDTO employee) {
 
+
 //        GetEmployeesInProjectDTO employeesInProjectDTO =
 //                new GetEmployeesInProjectDTO(employee.getEmId(), employee.getSkill());
 //
@@ -24,9 +25,9 @@ public class EmployeeMapper {
             skillId = employee.getSkillset().getFirst().getId(); // SkillDTO hat vermutlich getId()
         }
 
-        // DTO erzeugen
-        return new GetEmployeesInProjectDTO(employee.getEmId(), skillId);
-
+        GetEmployeesInProjectDTO employeesInProjectDTO =
+                new GetEmployeesInProjectDTO(employee.getId(), employee.getSkillset());
+        return employeesInProjectDTO;
     }
 
     public List<GetAllProjectsOfEmployeeDTO> mapProjectEntityToGetAllProjectsOfEmployeeDTO(
@@ -35,7 +36,11 @@ public class EmployeeMapper {
         List<GetAllProjectsOfEmployeeDTO> allProjectsOfEmployee = new ArrayList<>();
         for (ProjectEntity project : projectsOfEmployee) {
 
-            allProjectsOfEmployee.add(new GetAllProjectsOfEmployeeDTO(project.getId(), project.getProjectName()));
+            //TODO: herausfinden, wie man die skills aus einem projekt von einem mitarbeiter auslesen kann (benötigt
+            // skills die hinzugefügt werden können mit id)
+            allProjectsOfEmployee.add(
+                    new GetAllProjectsOfEmployeeDTO(project.getId(), project.getProjectName(), project.getStartDate(),
+                            project.getEndDate(), project.getEmployeeAssignment()));
         }
 
         return allProjectsOfEmployee;

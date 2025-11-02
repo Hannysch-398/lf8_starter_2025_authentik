@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class GetEmployeeDTO {
 
-    private Long emId;
+    private Long id;
     private String lastName;
     private String firstName;
     private String postcode;

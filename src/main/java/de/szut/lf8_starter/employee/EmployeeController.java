@@ -29,8 +29,15 @@ public class EmployeeController {
         this.employeeService = employeeService;
         this.employeeMapper = employeeMapper;
     }
+    //TODO: Enpunkt um alle Mitarbeiter auszugeben
+    //  @GetMapping
+    //public ResponseEntity<List<GetAllEmployeesDTO> >getAllEmployees(){
 
-    @GetMapping("/{employeeId}")
+    //};
+
+    //TODO: Endpunkt um die Daten von einem Mitarbeiter auszugeben
+
+    @GetMapping("/{employeeId}/projects")
     public ResponseEntity<List<GetAllProjectsOfEmployeeDTO>> getAllProjectsOfEmployee(@PathVariable long employeeId) {
 
         //alle Projekte holen
@@ -39,7 +46,22 @@ public class EmployeeController {
         //alle Projekte auf Mitarbeiter filtern
         List<ProjectEntity> projectOfEmployee = List.of();
         for (ProjectEntity project : allProjects) {
+
+            //UPDATED
             var assignments = project.getEmployeeAssignment() ;// <-- neue Feldbezeichnung
+
+            //ALT
+            /*
+            var employeesOfProject = project.getEmployeeIds();
+            for (Long id : employeesOfProject) {
+                if (id == employeeId) {
+                    projectOfEmployee.add(project);
+                    //TODO: hinzufügen von den anderen Attributen die mit ausgegeben werden sollen
+                }
+            }
+        }*/
+
+
 
             if (assignments != null) {
                 for (var assignment : assignments) {
@@ -63,4 +85,5 @@ public class EmployeeController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
 
     }
+
 }
