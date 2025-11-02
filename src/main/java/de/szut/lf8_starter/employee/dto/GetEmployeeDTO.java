@@ -1,6 +1,7 @@
 package de.szut.lf8_starter.employee.dto;
 
 import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,6 @@ public class GetEmployeeDTO {
     private String postcode;
     private String city;
     private String phone;
-//    private ArrayList skill;
-private List<SkillDTO> skillset;
+    //    private ArrayList skill;
+    private List<SkillDTO> skillset;
 }

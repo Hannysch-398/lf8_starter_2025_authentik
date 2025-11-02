@@ -9,12 +9,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class GetAllProjectsOfEmployeeDTO {
-
-
     private long projectId;
     private String projectName;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String skill;
-
+    private List skillSet;
 }
