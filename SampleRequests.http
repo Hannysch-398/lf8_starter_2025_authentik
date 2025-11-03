@@ -34,11 +34,17 @@ Content-Type: application/json
   "projectgoal": "hallo",
   "startDate": "2025-12-05",
   "endDate": "2025-12-20",
-  "employeeIds": [
-    1,
-    2,
-    3
-  ]
+  "employeeAssignment": [
+    {
+      "employeeId": 1,
+      "skillId": 1
+    },
+    {
+      "employeeId": 2,
+      "skillId": 1
+    }
+  ],
+  "actualEndDate": "2026-01-01"
 }
 
 ###
@@ -51,6 +57,23 @@ Authorization: Bearer {{token}}
 
 ###
 DELETE localhost:8080/lf8_starter/projects/1
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/projects/1/employees
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/employees/1/projects
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/employees/1
+Authorization: Bearer {{token}}
+
+
+###
+GET localhost:8080/lf8_starter/projects/1/employees
 Authorization: Bearer {{token}}
 
 

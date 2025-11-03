@@ -1,6 +1,7 @@
 package de.szut.lf8_starter.employee;
 
 import de.szut.lf8_starter.employee.dto.GetAllProjectsOfEmployeeDTO;
+import de.szut.lf8_starter.employee.dto.ReturnGetAllProjectsOfEmployeeDTO;
 import de.szut.lf8_starter.project.ProjectEntity;
 import de.szut.lf8_starter.project.ProjectMapper;
 import de.szut.lf8_starter.project.ProjectService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,38 +31,37 @@ public class EmployeeController {
         this.employeeService = employeeService;
         this.employeeMapper = employeeMapper;
     }
+    //TODO: Enpunkt um alle Mitarbeiter auszugeben
+    //  @GetMapping
+    //public ResponseEntity<List<GetAllEmployeesDTO> >getAllEmployees(){
 
-    @GetMapping("/{employeeId}")
-    public ResponseEntity<List<GetAllProjectsOfEmployeeDTO>> getAllProjectsOfEmployee(@PathVariable long employeeId) {
+    //};
+
+    //TODO: Endpunkt um die Daten von einem Mitarbeiter auszugeben
+
+    @GetMapping("/{employeeId}/projects")
+    public ResponseEntity<ReturnGetAllProjectsOfEmployeeDTO> getAllProjectsOfEmployee(@PathVariable long employeeId) {
 
         //alle Projekte holen
         List<ProjectEntity> allProjects = this.projectService.readAll();
 
         //alle Projekte auf Mitarbeiter filtern
-        List<ProjectEntity> projectOfEmployee = List.of();
+        List<ProjectEntity> projectOfEmployee = new ArrayList<>();
         for (ProjectEntity project : allProjects) {
-            var assignments = project.getEmployeeAssignment() ;// <-- neue Feldbezeichnung
-
+            var assignments = project.getEmployeeAssignment();
             if (assignments != null) {
                 for (var assignment : assignments) {
                     if (assignment.getEmployeeId() == employeeId) {
                         projectOfEmployee.add(project);
-                        //       for (ProjectEntity project : allProjects) {
-
-//            var employeesOfProject = project.getEmployeeIds();
-//            for (Long id : employeesOfProject) {
-//                if (id == employeeId) {
-//                    projectOfEmployee.add(project);
-
+                        break; // optional: sobald gefunden, nicht weiter loopen
                     }
                 }
             }
-
-
         }
-        var dtoList = employeeMapper.mapProjectEntityToGetAllProjectsOfEmployeeDTO(projectOfEmployee);
+        var dtoList = employeeMapper.mapProjectEntityToGetAllProjectsOfEmployeeDTO(projectOfEmployee, employeeId);
+        return ResponseEntity.ok(dtoList);
 
-        return new ResponseEntity<>(dtoList, HttpStatus.OK);
 
     }
+
 }

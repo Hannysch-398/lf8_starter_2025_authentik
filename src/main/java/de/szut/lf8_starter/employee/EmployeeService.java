@@ -1,5 +1,3 @@
-
-
 package de.szut.lf8_starter.employee;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 public class EmployeeService {
     private final RestTemplate restTemplate;
@@ -31,7 +28,9 @@ private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.de
     }
 
     public boolean employeeExists(Long emId) {
+
         String url = EMPLOYEE_SERVICE_URL + emId;
+
         try {
             restTemplate.getForObject(url, Object.class);
             return true;
@@ -71,12 +70,14 @@ public GetEmployeeDTO getEmployee(Long emId, String authorization) {
         return response.getBody();
     } catch (HttpClientErrorException.NotFound e) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden");
+
     }
 }
 
     public List<GetEmployeeDTO> getEmployees(List<EmployeeAssignment> employeeAssignments, String authorization) {
         return employeeAssignments.stream()
                 .map(EmployeeAssignment::getEmployeeId)
+
                 .map(id -> getEmployee(id, authorization))
                 .toList();
     }

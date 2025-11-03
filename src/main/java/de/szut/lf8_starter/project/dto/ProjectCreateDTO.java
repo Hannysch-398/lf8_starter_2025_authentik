@@ -36,5 +36,5 @@ public class ProjectCreateDTO {
     private LocalDate actualEndDate;
 
     private List<EmployeeAssignment> employeeAssignment;
-//private List<Long> employeeIds;
+
 }
