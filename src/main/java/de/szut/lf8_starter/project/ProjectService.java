@@ -71,16 +71,14 @@ public class ProjectService {
         }
 
         if (dto.getEmployeeAssignment() != null && !dto.getEmployeeAssignment().isEmpty()) {
-            List<EmployeeAssignment> assignments = dto.getEmployeeAssignment().stream()
-                    .map(a -> {
-                        boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
-                        if (!hasSkill) {
-                            throw new BadRequestException("Mitarbeiter " + a.getEmployeeId() +
-                                    " besitzt Skill " + a.getSkillId() + " nicht.");
-                        }
-                        return new EmployeeAssignment(a.getEmployeeId(), a.getSkillId());
-                    })
-                    .toList();
+            List<EmployeeAssignment> assignments = dto.getEmployeeAssignment().stream().map(a -> {
+                boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
+                if (!hasSkill) {
+                    throw new BadRequestException(
+                            "Mitarbeiter " + a.getEmployeeId() + " besitzt Skill " + a.getSkillId() + " nicht.");
+                }
+                return new EmployeeAssignment(a.getEmployeeId(), a.getSkillId());
+            }).toList();
             dto.getEmployeeAssignment().forEach(a -> {
                 System.out.println("Employee " + a.getEmployeeId() + " Skill " + a.getSkillId());
             });
@@ -137,4 +135,12 @@ public class ProjectService {
         }
     }
 
+    public void delete(long id) {
+        ProjectEntity entityToDelete = readByID(id);
+        repository.delete(entityToDelete);
+    }
 }
+
+
+
+

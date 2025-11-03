@@ -41,7 +41,6 @@ public class ProjectController {
                                                                   @RequestHeader("Authorization")
                                                                   String authorization) {
 
-
         ProjectEntity newProject = this.service.create(dto, authorization);
 
         CreateProjectResponseDTO response = new CreateProjectResponseDTO(newProject.getId(), "created");
@@ -85,4 +84,25 @@ public class ProjectController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
 
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        var project = service.readByID(id);
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        var assignments = project.getEmployeeAssignment();
+        if (assignments != null && !assignments.isEmpty()) {
+            // Mitarbeiter hängen noch am Projekt → 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        service.delete(id);
+        // Erfolgreich gelöscht, kein Body bei 204
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
+
