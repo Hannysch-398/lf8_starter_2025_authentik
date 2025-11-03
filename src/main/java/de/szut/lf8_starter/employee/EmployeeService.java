@@ -18,8 +18,8 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private final RestTemplate restTemplate;
-//    @Value("${employee.service.url}")
-private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.dev/employees";
+    //    @Value("${employee.service.url}")
+    private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.dev/employees";
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
 
@@ -27,17 +27,39 @@ private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.de
         this.restTemplate = restTemplate;
     }
 
-    public boolean employeeExists(Long emId) {
+    public void employeeExists(Long emId, String authorization) {
+        String url = EMPLOYEE_SERVICE_URL + "/" + emId;
 
-        String url = EMPLOYEE_SERVICE_URL + emId;
+        HttpHeaders headers = new HttpHeaders();
+        // Authorization-Header nur setzen, wenn vorhanden
+        if (authorization != null && !authorization.isBlank()) {
+            headers.add(HttpHeaders.AUTHORIZATION, authorization);
+        }
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         try {
-            restTemplate.getForObject(url, Object.class);
-            return true;
+            // Request an Employee-Service mit Token
+            restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+
         } catch (HttpClientErrorException.NotFound e) {
-            return false;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden (ID: " + emId + ")");
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Ungültiges oder fehlendes Token für Employee-Service");
+        } catch (HttpClientErrorException.Forbidden e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Zugriff auf Employee-Service verweigert");
+        } catch (HttpClientErrorException ex) {
+            // Alle anderen HTTP-Fehler → 502
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
+                    "Employee-Service nicht erreichbar: " + ex.getStatusCode());
+        } catch (Exception ex) {
+            // Sonstige Fehler (z. B. Timeout, Parsing etc.)
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Fehler beim Abrufen des Mitarbeiters",
+                    ex);
         }
     }
+
 //
 //    public GetEmployeeDTO getEmployee(Long emId) {
 //        String url = employeeServiceUrl + emId;
@@ -49,37 +71,31 @@ private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.de
 //
 //    }
 
-//    public List<GetEmployeeDTO> getEmployees(List<EmployeeAssignment> employeeIds) {
+    //    public List<GetEmployeeDTO> getEmployees(List<EmployeeAssignment> employeeIds) {
 //        return employeeIds.stream().map(this::getEmployee).toList();
 //    }
-public GetEmployeeDTO getEmployee(Long emId, String authorization) {
-    String url = "https://employee-api.szut.dev/employees/" + emId;
+    public GetEmployeeDTO getEmployee(Long emId, String authorization) {
+        String url = "https://employee-api.szut.dev/employees/" + emId;
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.AUTHORIZATION, authorization); // <-- Token aus Controller durchreichen
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, authorization); // <-- Token aus Controller durchreichen
 
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-    try {
-        ResponseEntity<GetEmployeeDTO> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                GetEmployeeDTO.class
-        );
-        return response.getBody();
-    } catch (HttpClientErrorException.NotFound e) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden");
+        try {
+            ResponseEntity<GetEmployeeDTO> response =
+                    restTemplate.exchange(url, HttpMethod.GET, entity, GetEmployeeDTO.class);
+            return response.getBody();
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden");
 
+        }
     }
-}
 
     public List<GetEmployeeDTO> getEmployees(List<EmployeeAssignment> employeeAssignments, String authorization) {
-        return employeeAssignments.stream()
-                .map(EmployeeAssignment::getEmployeeId)
+        return employeeAssignments.stream().map(EmployeeAssignment::getEmployeeId)
 
-                .map(id -> getEmployee(id, authorization))
-                .toList();
+                .map(id -> getEmployee(id, authorization)).toList();
     }
 
 
@@ -93,52 +109,46 @@ public GetEmployeeDTO getEmployee(Long emId, String authorization) {
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         try {
-            // wir holen als String, damit wir die rohe Antwort sehen
             ResponseEntity<String> resp = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-//
-//            System.out.println("employeeHasSkill -> url: " + url);
-//            System.out.println("employeeHasSkill -> status: " + resp.getStatusCode());
-//            System.out.println("employeeHasSkill -> content-type: " + resp.getHeaders().getContentType());
-//            System.out.println("employeeHasSkill -> raw body: " + resp.getBody());
 
             String body = resp.getBody();
-            if (body == null || body.isBlank()) return false;
+            if (body == null || body.isBlank()) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Leere Antwort vom Employee-Service");
+            }
 
-            // JSON parsen (robust)
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(body);
 
-            // support different shapes: maybe employee object or array
             JsonNode skillSetNode = root.get("skillSet");
             if (skillSetNode == null || !skillSetNode.isArray()) {
-                System.out.println("employeeHasSkill -> kein skillSet gefunden");
-                return false;
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Kein SkillSet im Employee gefunden");
             }
 
-            // Liste aller Skill-IDs im Log sammeln
             List<String> foundIds = new ArrayList<>();
             for (JsonNode s : skillSetNode) {
                 JsonNode idNode = s.get("id");
                 if (idNode != null && !idNode.isNull()) {
-                    String idStr = idNode.asText();
-                    foundIds.add(idStr);
+                    foundIds.add(idNode.asText());
                 }
             }
-            System.out.println("employeeHasSkill -> skill IDs found: " + foundIds);
 
-            // Vergleich tolerant: string-compare der Zahlen (handles Long/Integer/Text)
             String wanted = String.valueOf(skillId);
             boolean match = foundIds.stream().anyMatch(id -> id.equals(wanted));
 
-            System.out.println("employeeHasSkill -> match = " + match);
-            return match;
+            if (!match) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Mitarbeiter hat den Skill " + skillId + " nicht");
+            }
+
+            return true;
 
         } catch (HttpClientErrorException.NotFound nf) {
-            System.err.println("employeeHasSkill -> Mitarbeiter nicht gefunden: " + employeeId);
-            return false;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden: " + employeeId, nf);
         } catch (IOException e) {
-            log.error("employeeHasSkill -> Fehler beim Prüfen des Mitarbeiters " + employeeId + ": " + e.getMessage());
-            return false;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Fehler beim Parsen der Employee-Daten",
+                    e);
         }
     }
 
