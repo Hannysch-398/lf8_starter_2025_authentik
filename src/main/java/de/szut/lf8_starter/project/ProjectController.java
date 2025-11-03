@@ -103,6 +103,17 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<GetProjectDTO> updateProject(
+            @PathVariable long id,
+            @Valid @RequestBody ProjectCreateDTO dto,
+            @RequestHeader("Authorization") String authorization) {
+
+        ProjectEntity updated = this.service.update(id, dto, authorization);
+        GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(updated);
+
+        return ResponseEntity.ok(response);
+    }
 
 }
 

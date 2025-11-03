@@ -3,6 +3,7 @@ package de.szut.lf8_starter.project;
 import de.szut.lf8_starter.employee.EmployeeAssignment;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 
 import de.szut.lf8_starter.employee.EmployeeService;
@@ -139,6 +140,67 @@ public class ProjectService {
         ProjectEntity entityToDelete = readByID(id);
         repository.delete(entityToDelete);
     }
+    public ProjectEntity update(long id, ProjectCreateDTO dto, String authorization) {
+        ProjectEntity existing = this.readByID(id);
+
+        if (existing == null) {
+            throw new ResourceNotFoundException("Projekt mit ID " + id + " nicht gefunden");
+        }
+
+        // Pflichtfelder prüfen (wie bei create)
+        if (dto.getEmId() == null) {
+            throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
+        }
+        if (dto.getCuId() == null) {
+            throw new BadRequestException("Kunden-ID darf nicht null sein");
+        }
+        if (dto.getCuName() == null || dto.getCuName().isBlank()) {
+            throw new BadRequestException("Kundenansprechpartner darf nicht leer sein");
+        }
+        if (dto.getStartDate() == null || dto.getEndDate() == null) {
+            throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
+        }
+        if (dto.getProjectName() == null || dto.getProjectName().isBlank()) {
+            throw new BadRequestException("Projektname darf nicht leer sein");
+        }
+        if (dto.getProjectgoal() == null || dto.getProjectgoal().isBlank()) {
+            throw new BadRequestException("Projektziel darf nicht leer sein");
+        }
+
+        // Employee und Kunde prüfen
+        verifyEmployeeExists(dto.getEmId());
+        verifyCustomerExists(dto.getCuId());
+
+        // Felder aktualisieren
+        existing.setProjectName(dto.getProjectName());
+        existing.setCuId(dto.getCuId());
+        existing.setCuName(dto.getCuName());
+        existing.setProjectgoal(dto.getProjectgoal());
+        existing.setStartDate(dto.getStartDate());
+        existing.setEndDate(dto.getEndDate());
+        existing.setActualEndDate(dto.getActualEndDate()); // falls du das neue Feld hast
+
+        // Optional: Mitarbeiter neu zuordnen (wenn DTO eine neue Liste hat)
+        if (dto.getEmployeeAssignment() != null) {
+            // Optional: Validierung (wie beim Create)
+            dto.getEmployeeAssignment().forEach(a -> {
+                boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
+                if (!hasSkill) {
+                    throw new BadRequestException("Mitarbeiter " + a.getEmployeeId() +
+                            " besitzt Skill " + a.getSkillId() + " nicht.");
+                }
+            });
+
+            existing.setEmployeeAssignment(dto.getEmployeeAssignment());
+        }
+
+        // Datum prüfen
+        if (existing.getEndDate().isBefore(existing.getStartDate())) {
+            throw new InvalidProjectDateException("Enddatum darf nicht vor Startdatum liegen.");
+        }
+        return this.repository.save(existing);
+    }
+
 }
 
 
