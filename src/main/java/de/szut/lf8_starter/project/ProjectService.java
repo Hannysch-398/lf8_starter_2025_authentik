@@ -61,10 +61,7 @@ public class ProjectService {
         verifyCustomerExists(dto.getCuId());
         checkEmployeeAlreadyAssigned(dto.getEmId());
 
-        // Konflikte prüfen
-//        if (isEmployeeAlreadyAssigned(dto.getEm_id())) {
-//            throw new EmployeeConflictException("Mitarbeiter ist bereits in einem anderen Projekt verantwortlich");
-//        }
+
 
         ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
 
@@ -95,8 +92,7 @@ public class ProjectService {
             throw new BadRequestException("Projektziel darf nicht leer sein");
         }
 
-        // ProjectEntity savedEntity = repository.save(entity);
-
+       entity.setActualEndDate(dto.getActualEndDate());
 
         return repository.save(entity);
     }

@@ -1,4 +1,4 @@
-@token =    eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyYzg5YjIxNTA4YjMwODQ1NDQyNGRiOGYyMDU1ODI3IiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2F1dGhlbnRpay5zenV0LmRldi9hcHBsaWNhdGlvbi9vL2hpdGVjLyIsInN1YiI6IjhhYjRkZTBiNmJhZGQ2ZGVhNTM1M2Y3YzExNWVmN2FiZGMyMmEzYmQyZTNmZjRjMmU5NDYzN2JlY2I2OGUzMGEiLCJhdWQiOiJoaXRlY19hcGlfY2xpZW50IiwiZXhwIjoxNzYxNzMzNTQ5LCJpYXQiOjE3NjE3MjYzNDksImF1dGhfdGltZSI6MTc2MTcyNjM0OSwiYWNyIjoiZ29hdXRoZW50aWsuaW8vcHJvdmlkZXJzL29hdXRoMi9kZWZhdWx0IiwiYXpwIjoiaGl0ZWNfYXBpX2NsaWVudCIsInVpZCI6IlRvRkdvUzFWMTY5N050WHRHdGY0b3UzaUd2WUc2TExycVBScXI3dUwifQ.A3FANOlVr-JyuhMP3-p6tH_yb4y4HIxsl0PX9UxFMn0gvmRdSchiEYBXTYM5GQdQnIj8J35i6O2esNe5DQCzDHGxGgUXA63wwq660dAMDU6AO6fTSqZft_Bt9gBbWg7FSPwJpGRR3yhvLqqFcE0K6qJ59i1eS4nvhUVOefs_SdUS8DqVokVT0-ZFpnCHRjt4HtuCk5OQgV0PB-4ypKpZf12tvwWQ5PdGHDBFBrSzb4f4t2aIeVIIONIohat7eB2vilFmE7-2cezjC02DYbY_llUKWJwyRW7zilLC30p8gTXXVam2VJy2eEdHPPq2MPcBy9EjR6rqBzoLpKxDc1duCTyRN9Hn7SJXaKTNFZAKhN6YTcE87SbTqP9jc63MXn_7LiWbvOsGlu4HfubOrD9wiU7gF7egYHfJlzEO8VFhkxms1zlaPz243r1REcTGLmzfBWCdpmmSsrLbRhNPXLhUS5stAgO80F6VBBzghzG9USvfWfBd05QIp16eAvs2y_MswUJVXJ6XRprT0N_0hrc70WufhpKl8WafYkJsbRaWZDfgp9R8bQnoimn1bS5qsWM5nAQX5qXhZg-EkdzImkH8Su_oYgNjET2muxkDCs5E7NvkPmYZEvlIEcP83JHbd4AKt1BXnNg7YRs75-RgOsgDps9FXB2rbYH1Vk9UxYFiQtM
+@token =eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyYzg5YjIxNTA4YjMwODQ1NDQyNGRiOGYyMDU1ODI3IiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2F1dGhlbnRpay5zenV0LmRldi9hcHBsaWNhdGlvbi9vL2hpdGVjLyIsInN1YiI6IjhhYjRkZTBiNmJhZGQ2ZGVhNTM1M2Y3YzExNWVmN2FiZGMyMmEzYmQyZTNmZjRjMmU5NDYzN2JlY2I2OGUzMGEiLCJhdWQiOiJoaXRlY19hcGlfY2xpZW50IiwiZXhwIjoxNzYyMTExNDYyLCJpYXQiOjE3NjIxMDQyNjIsImF1dGhfdGltZSI6MTc2MjEwNDI2MiwiYWNyIjoiZ29hdXRoZW50aWsuaW8vcHJvdmlkZXJzL29hdXRoMi9kZWZhdWx0IiwiYXpwIjoiaGl0ZWNfYXBpX2NsaWVudCIsInVpZCI6InlDUUY3bzNtbkJ4N3VCQWJ1Y1dOMmx5RDhiQXY4ZmxXTUtZUUNieEgifQ.FuuMAkfU6lNqZmbSV7CzqNxA3Rv2GwUaTt4YeENDEiPXW3T6mnBFeSmUJH--5U5rFzJ-5Nwd-Rai4C83RexRHV35MFMbygDJ4fwxTdIKv3QqnGUDNfdDTifmiEI23axVy590PxisCnvr8Gj-CZT01dHEE3yjLKXX_3ZOEfZPc3XzqtNGIvq9ViMZNc3152tfCp6dZJ-bEn3HouA7dhmYwb1WQ26w0TS8NVAc1dxPgT8-14wIgm2NsgLQ-zTuPaPn4J_J4ZalXDkZU4skWSNWX5s_0Pwb0Gn4sJGUFgB7I8BWDGu348ZSQxS-Wx4zF20M0eERO7S1QL1-js96Ahk4nmr8mUE5YZUEV_VoEP686cLYKjETBCgwJoz_jY78wx41gMS44NMIlsbDzc8vIxSPSZvrTx3wCy-UVaqIBSooVNB2g5blpf5XyCcBVyF2YufKJyg__pC6IcXxATFZZYC2sk7XrlHbMxyBjBnGwnUWtVKcg-jSJDPg3WtJ961WJHroAXP3mxlw-QWxE3ndlxS9-WtP3xLm_p3Qe5vsp32_qRk6HdZTrNoWmDQR9tlmXvNH9qZ9rBbPku2s-JnTr6rIZUBJOdO8XmMaI9ty3HZGJ9PW3oUcjsF0BpM76bg1mi0Agx5f30dYZssSFEUz9-aM7Ypppv7cdf4cKs9GslikoAo
 
 
 ###
@@ -34,11 +34,17 @@ Content-Type: application/json
   "projectgoal": "hallo",
   "startDate": "2025-12-05",
   "endDate": "2025-12-20",
-  "employeeIds": [
-    1,
-    2,
-    3
-  ]
+  "employeeAssignment": [
+    {
+      "employeeId": 1,
+      "skillId": 1
+    },
+    {
+      "employeeId": 2,
+      "skillId": 1
+    }
+  ],
+  "actualEndDate": "2026-01-01"
 }
 
 ###
@@ -47,6 +53,23 @@ Authorization: Bearer {{token}}
 
 ###
 GET localhost:8080/lf8_starter/projects/1
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/projects/1/employees
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/employees/1/projects
+Authorization: Bearer {{token}}
+
+###
+GET localhost:8080/lf8_starter/employees/1
+Authorization: Bearer {{token}}
+
+
+###
+GET localhost:8080/lf8_starter/projects/1/employees
 Authorization: Bearer {{token}}
 
 
