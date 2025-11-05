@@ -1,4 +1,4 @@
-package de.szut.lf8_starter.Project;
+..package de.szut.lf8_starter.project;
 
 import de.szut.lf8_starter.project.*;
 import de.szut.lf8_starter.project.dto.GetProjectDTO;
