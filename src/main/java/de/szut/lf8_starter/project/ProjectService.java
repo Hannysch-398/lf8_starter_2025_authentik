@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class ProjectService {
         //verifyEmployeeExists(dto.getEmId());
         employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
-        checkEmployeeAlreadyAssigned(dto.getEmId());
+//        checkEmployeeAlreadyAssigned(dto.getEmId());
 
 
         ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
@@ -68,6 +69,8 @@ public class ProjectService {
             }).toList();
             dto.getEmployeeAssignment().forEach(a -> {
                 System.out.println("Employee " + a.getEmployeeId() + " Skill " + a.getSkillId());
+                checkEmployeeAvailability(a.getEmployeeId(), dto.getStartDate(), dto.getEndDate(), null);
+
             });
             entity.setEmployeeAssignment(assignments);
         }
@@ -110,11 +113,11 @@ public class ProjectService {
 
 
 
-    private void checkEmployeeAlreadyAssigned(Long emId) {
-        if (repository.existsByEmId(emId)) {
-            throw new EmployeeConflictException("Employee is already assigned to another project.");
-        }
-    }
+//    private void checkEmployeeAlreadyAssigned(Long emId) {
+//        if (repository.existsByEmployeeAssignment_EmployeeId(emId)) {
+//            throw new EmployeeConflictException("Employee is already assigned to another project.");
+//        }
+//    }
 
     private void verifyCustomerExists(Long customerId) {
         if (customerId == null) {
@@ -191,6 +194,48 @@ public class ProjectService {
 
         project.setEmployeeAssignment(assignments);
         repository.save(project);
+    }
+
+//    private void checkEmployeeAvailability(Long employeeId, LocalDate startDate, LocalDate endDate, Long id) {
+//        // Hole alle Projekte, in denen der Mitarbeiter bereits eingeplant ist
+//        List<ProjectEntity> allProjects = repository.findAll();
+//
+//        for (ProjectEntity project : allProjects) {
+//            List<EmployeeAssignment> assignments = project.getEmployeeAssignment();
+//            if (assignments == null) continue;
+//
+//            // Prüfen, ob der Mitarbeiter in diesem Projekt eingeplant ist
+//            boolean isAssigned = assignments.stream()
+//                    .anyMatch(a -> a.getEmployeeId().equals(employeeId));
+//
+//            if (isAssigned) {
+//                LocalDate projectStart = project.getStartDate();
+//                LocalDate projectEnd = project.getEndDate();
+//
+//                // Prüfen, ob sich die Projektzeiträume überschneiden
+//                boolean overlaps = !(projectEnd.isBefore(startDate) || projectStart.isAfter(endDate));
+//
+//                if (overlaps) {
+//                    throw new EmployeeConflictException(
+//                            "Employee " + employeeId + " is already assigned to another project during this period (" +
+//                                    projectStart + " - " + projectEnd + ")."
+//                    );
+//                }
+//            }
+//        }
+//    }
+
+    private void checkEmployeeAvailability(Long emId, LocalDate startDate, LocalDate endDate, Long projectId) {
+        List<ProjectEntity> overlappingProjects = repository.findAll().stream()
+                .filter(p -> !p.getId().equals(projectId))
+                .filter(p -> p.getEmployeeAssignment().stream()
+                        .anyMatch(a -> a.getEmployeeId().equals(emId)))
+                .filter(p -> !(p.getEndDate().isBefore(startDate) || p.getStartDate().isAfter(endDate)))
+                .toList();
+
+        if (!overlappingProjects.isEmpty()) {
+            throw new EmployeeConflictException("Employee " + emId + " is already assigned to another project in this period.");
+        }
     }
 
 }

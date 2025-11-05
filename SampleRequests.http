@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyYzg5YjIxNTA4YjMwODQ1NDQyNGRiOGYyMDU1ODI3IiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2F1dGhlbnRpay5zenV0LmRldi9hcHBsaWNhdGlvbi9vL2hpdGVjLyIsInN1YiI6IjhhYjRkZTBiNmJhZGQ2ZGVhNTM1M2Y3YzExNWVmN2FiZGMyMmEzYmQyZTNmZjRjMmU5NDYzN2JlY2I2OGUzMGEiLCJhdWQiOiJoaXRlY19hcGlfY2xpZW50IiwiZXhwIjoxNzYyMTg4MDg2LCJpYXQiOjE3NjIxODA4ODYsImF1dGhfdGltZSI6MTc2MjE4MDg4NiwiYWNyIjoiZ29hdXRoZW50aWsuaW8vcHJvdmlkZXJzL29hdXRoMi9kZWZhdWx0IiwiYXpwIjoiaGl0ZWNfYXBpX2NsaWVudCIsInVpZCI6ImJ5eHliZm81R1QyNDh1QTYzdW5GdGJLZHNDMWNBMUV0aE1seUpiQloifQ.vx6IecOlxuNYUWvq7Pr-yGPzjaE5voQuRRfiTe_NbBYyU7d6SMl3B4FRjEpvA4hdHzRSyvQqXjF0rU_yeWBzcDLSlmmFWQ0FB3ufPM_JeYHRrh9Ud6symnM85fUoywx9hoJ2q-4Fmucb-VeioW3HXAqR9N1Swj2f4ozLQzs0xw2K8BD8AGtY1FY37myBFZC289xjMlALdO2GRMdVkYWHaE2euJ4bctYQWirgkoSlaAtI2LOFPQulyZUo3bDYxHqqH-51pVYS5m9-xdIRGaN0g10BD9QBp92Fxe3nnJTLCipY2UsG6Onz0b9LJvR0EXSrge2Yzgqr8HxZBixXCDpsUR2bbOkhpW3eTg3HiDOffbYZOoOHXKqonvNGPdkTmQiJrcNvwEOSSjSF7cTADbfpNM98KMHiIue16mEybZ-73LnxItAIS9_KQiPqGSxZNPy77YmaGhMGN0EKYpGBN50F3X7aIG8r-KqKxv-UIydWysCN4yt8yPPOwMsjXgecx_CsSYbwrzGV35cF_cNj7tcUvONzIgXmlqcQB8dXA4Ish0OXjwJhtmRKYNsOQAEGjcYXYQd-LI6tqB3EbV7gfHNs3L671UDkF5PKpKGdl6_cp9T1MHq3sfoS92VN9Kjv_MRRNbDwZv8KyqLWmzZFwB5Nec3yvyAB8-RwiGo25OyWEIg
+@token = eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyYzg5YjIxNTA4YjMwODQ1NDQyNGRiOGYyMDU1ODI3IiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2F1dGhlbnRpay5zenV0LmRldi9hcHBsaWNhdGlvbi9vL2hpdGVjLyIsInN1YiI6IjhhYjRkZTBiNmJhZGQ2ZGVhNTM1M2Y3YzExNWVmN2FiZGMyMmEzYmQyZTNmZjRjMmU5NDYzN2JlY2I2OGUzMGEiLCJhdWQiOiJoaXRlY19hcGlfY2xpZW50IiwiZXhwIjoxNzYyMzQwNDA2LCJpYXQiOjE3NjIzMzMyMDYsImF1dGhfdGltZSI6MTc2MjMzMzIwNiwiYWNyIjoiZ29hdXRoZW50aWsuaW8vcHJvdmlkZXJzL29hdXRoMi9kZWZhdWx0IiwiYXpwIjoiaGl0ZWNfYXBpX2NsaWVudCIsInVpZCI6IkkzYXZKeXNmTzJFZ3d1Y25uRnpBbDlHOEgwTUdYYTEwMzRHanBQSGEifQ.zZgn2wmKSI_gJeJEDqB7-H_qZKjpYwOh0MZJvputBvhXjQrKb-CwL9O4ndCqzn9YIDetaor071ya3Aud9L6mZVKrZtTI_T7LtXpW7odyPl9I44AZR4J8blQFN6NTBVmbDLgiMOTam40rZIC0DNrNNG2ZozV-US6KzKZzLdjuN7KaKsOB8C20Sc1_6MghA-Bz400CC76NbtBDsg5G-DjKHAbuLKiMnCNhN-LozRcIg2eO9gUymPTJR9sxdIaPkzUeEN0v_8jxB7Ue5vmrS5jBd51cswKQQBcGpwfenYXNRKZo8T2098IiGS9Di2ZGNlc_RtDo__ieTKvQO0yXRIVA2xCmG7GrwsOq1YuzoKIMFMTm-SvEZo4gHVnwfpr9TMoSEMgT8nAj62JRcEt2prYK6Zi3ikDctkXi4Sv1s3Y_kH5PlHjXM242kLalAzejKay9BW4NQ35fGRbogzdp2DZ3DDOVaSEmebCR5o3GK-P18WUg8OM6X7MS-2dGmniFZdESJijpJ3Q4uA_M-VS-DOhY0kNyo9WTY-3qe6tooGOlYkDcBctXyB_bUuUtUyj9Lk-WEoxMSf01OMwfpHCxfvAZZX_1EdegGiDJC_9-70HVPcjQ7zpG_cZ6u5LDYHt6MfWtdcH4Yy5-CV8XMskjljoJVNYkw4UDxfxwuBPS66YtiVQ
 
 
 ###
@@ -28,21 +28,18 @@ Content-Type: application/json
 
 {
   "emId": 1,
-  "projectName": "projekt test",
+  "projectName": "projekt test 3",
   "cuId": 5,
-  "cuName": "Mustermann",
-  "projectgoal": "hallo",
+  "cuName": "Mustermann2",
+  "projectgoal": "hallo2",
   "startDate": "2025-12-05",
   "endDate": "2025-12-20",
   "employeeAssignment": [
     {
       "employeeId": 1,
       "skillId": 1
-    },
-    {
-      "employeeId": 2,
-      "skillId": 1
     }
+
   ],
   "actualEndDate": "2026-01-01"
 }
@@ -92,3 +89,22 @@ Authorization: Bearer {{token}}
 ###
 DELETE http://localhost:8080/lf8_starter/projects/2/employees/2
 Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:8080/lf8_starter/projects/1
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "projectName": "Projekt Update Test",
+  "cuId": 5,
+  "cuName": "Max Mustermann",
+  "projectgoal": "Updated Goal",
+  "startDate": "2025-11-01",
+  "endDate": "2025-12-01",
+  "actualEndDate": "2025-11-15",
+  "employeeAssignment": [
+    { "employeeId": 1, "skillId": 1 },
+    { "employeeId": 2, "skillId": 1 }
+  ]
+}

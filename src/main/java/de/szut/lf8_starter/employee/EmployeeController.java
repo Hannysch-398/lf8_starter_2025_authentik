@@ -31,14 +31,6 @@ public class EmployeeController {
         this.employeeService = employeeService;
         this.employeeMapper = employeeMapper;
     }
-    //TODO: Enpunkt um alle Mitarbeiter auszugeben
-    //  @GetMapping
-    //public ResponseEntity<List<GetAllEmployeesDTO> >getAllEmployees(){
-
-    //};
-
-    //TODO: Endpunkt um die Daten von einem Mitarbeiter auszugeben
-
     @GetMapping("/{employeeId}/projects")
     public ResponseEntity<ReturnGetAllProjectsOfEmployeeDTO> getAllProjectsOfEmployee(@PathVariable long employeeId) {
 
