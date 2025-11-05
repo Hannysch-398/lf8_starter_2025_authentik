@@ -1,6 +1,7 @@
 package de.szut.lf8_starter.project;
 
 import de.szut.lf8_starter.employee.EmployeeAssignment;
+import de.szut.lf8_starter.employee.dto.SkillDTO;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -27,6 +28,7 @@ public class ProjectService {
     private final RestTemplate restTemplate;
 
     private static final String CUSTOMER_SERVICE_URL = "http://customer-api.szut.dev/customers";
+    private static final String EMPLOYEES_SERVICE_URL = "http://customer-api.szut.dev/employees";
 
 
     public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,
@@ -42,10 +44,10 @@ public class ProjectService {
 
 
         // Employee und Kunde prüfen
-        verifyEmployeeExists(dto.getEmId());
+        //verifyEmployeeExists(dto.getEmId());
+        employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
         checkEmployeeAlreadyAssigned(dto.getEmId());
-
 
 
         ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
@@ -75,9 +77,23 @@ public class ProjectService {
             throw new BadRequestException("Project goal must not be empty.");
         }
 
-       entity.setActualEndDate(dto.getActualEndDate());
+        entity.setActualEndDate(dto.getActualEndDate());
 
         return repository.save(entity);
+    }
+
+    public ProjectEntity addEmployee(long id, EmployeeAssignment dto, String authorization) {
+
+        ProjectEntity originalProject = readByID(id);
+        employeeService.employeeExists(dto.getEmployeeId(),authorization);
+        employeeService.employeeHasSkill(dto.getEmployeeId(), dto.getSkillId(), authorization);
+
+        List<EmployeeAssignment> currentEmployees = originalProject.getEmployeeAssignment();
+
+        currentEmployees.add(dto);
+        originalProject.setEmployeeAssignment(currentEmployees);
+
+        return repository.save(originalProject);
     }
 
     public List<ProjectEntity> readAll() {
@@ -92,13 +108,7 @@ public class ProjectService {
         return oProject.get();
     }
 
-    private void verifyEmployeeExists(Long emId) {
-        if (emId == null) {
-            throw new BadRequestException("Employee ID must not be null.");
-        }
-        // Optional: RestTemplate-Aufruf prüfen
-        // Dummy: Angenommen, Mitarbeiter existiert
-    }
+
 
     private void checkEmployeeAlreadyAssigned(Long emId) {
         if (repository.existsByEmId(emId)) {
@@ -124,35 +134,13 @@ public class ProjectService {
         ProjectEntity entityToDelete = readByID(id);
         repository.delete(entityToDelete);
     }
+
     public ProjectEntity update(long id, ProjectCreateDTO dto, String authorization) {
         ProjectEntity existing = this.readByID(id);
 
-        if (existing == null) {
-            throw new ResourceNotFoundException("ProjectID " + id + " not found.");
-        }
-
-        // Pflichtfelder prüfen (wie bei create)
-        if (dto.getEmId() == null) {
-            throw new BadRequestException("Employee ID must not be null.");
-        }
-        if (dto.getCuId() == null) {
-            throw new BadRequestException("CustomerID must not be null.");
-        }
-        if (dto.getCuName() == null || dto.getCuName().isBlank()) {
-            throw new BadRequestException("Customer contact name must not be empty.");
-        }
-        if (dto.getStartDate() == null || dto.getEndDate() == null) {
-            throw new BadRequestException("Start and end dates must be provided.");
-        }
-        if (dto.getProjectName() == null || dto.getProjectName().isBlank()) {
-            throw new BadRequestException("Project name must be provided.");
-        }
-        if (dto.getProjectgoal() == null || dto.getProjectgoal().isBlank()) {
-            throw new BadRequestException("Project goal must not be null.");
-        }
-
         // Employee und Kunde prüfen
-        verifyEmployeeExists(dto.getEmId());
+        // verifyEmployeeExists(dto.getEmId());
+        employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
 
         // Felder aktualisieren
@@ -170,8 +158,10 @@ public class ProjectService {
             dto.getEmployeeAssignment().forEach(a -> {
                 boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
                 if (!hasSkill) {
+
                     throw new BadRequestException("Employee " + a.getEmployeeId() +
                             " has no skill " + a.getSkillId() );
+
                 }
             });
 
