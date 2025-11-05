@@ -1,6 +1,8 @@
 package de.szut.lf8_starter.project;
 
 
+import de.szut.lf8_starter.employee.EmployeeAssignment;
+import de.szut.lf8_starter.employee.dto.SkillDTO;
 import de.szut.lf8_starter.project.dto.*;
 import de.szut.lf8_starter.employee.EmployeeMapper;
 import de.szut.lf8_starter.employee.EmployeeService;
@@ -69,8 +71,7 @@ public class ProjectController {
 
 
     @GetMapping("/{id}/employees")
-    public ResponseEntity<ReturnGetEmployeesInProjectDTO> findAllEmployeesInProject(@PathVariable final long id
-                                                                                   ) {
+    public ResponseEntity<ReturnGetEmployeesInProjectDTO> findAllEmployeesInProject(@PathVariable final long id) {
         //Projekt wird aus dem Projektservice geholt
         var project = this.service.readByID(id);
 
@@ -104,15 +105,22 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetProjectDTO> updateProject(
-            @PathVariable long id,
-            @Valid @RequestBody ProjectCreateDTO dto,
-            @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<GetProjectDTO> updateProject(@PathVariable long id, @Valid @RequestBody ProjectCreateDTO dto,
+                                                       @RequestHeader("Authorization") String authorization) {
 
         ProjectEntity updated = this.service.update(id, dto, authorization);
         GetProjectDTO response = this.mapper.mapProjectToGetProjectDTO(updated);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> addEmployeeToProject(@PathVariable long id, @Valid @RequestBody EmployeeAssignment dto,
+                                                     @RequestHeader("Authorization") String authorization) {
+
+        var updated = this.service.addEmployee(id, dto, authorization);
+
+        return ResponseEntity.ok().build();
     }
 
 }

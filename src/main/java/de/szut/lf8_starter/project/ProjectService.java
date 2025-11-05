@@ -1,6 +1,7 @@
 package de.szut.lf8_starter.project;
 
 import de.szut.lf8_starter.employee.EmployeeAssignment;
+import de.szut.lf8_starter.employee.dto.SkillDTO;
 import de.szut.lf8_starter.exceptionHandling.*;
 import de.szut.lf8_starter.project.dto.ProjectCreateDTO;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -26,6 +27,7 @@ public class ProjectService {
     private final RestTemplate restTemplate;
 
     private static final String CUSTOMER_SERVICE_URL = "http://customer-api.szut.dev/customers";
+    private static final String EMPLOYEES_SERVICE_URL = "http://customer-api.szut.dev/employees";
 
 
     public ProjectService(ProjectRepository repository, ProjectMapper mapper, RestTemplate restTemplate,
@@ -58,10 +60,10 @@ public class ProjectService {
 //        boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
 
         // Employee und Kunde prüfen
-        verifyEmployeeExists(dto.getEmId());
+        //verifyEmployeeExists(dto.getEmId());
+        employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
         checkEmployeeAlreadyAssigned(dto.getEmId());
-
 
 
         ProjectEntity entity = mapper.mapCreateProjectDtoToProject(dto);
@@ -91,9 +93,23 @@ public class ProjectService {
             throw new BadRequestException("Projektziel darf nicht leer sein");
         }
 
-       entity.setActualEndDate(dto.getActualEndDate());
+        entity.setActualEndDate(dto.getActualEndDate());
 
         return repository.save(entity);
+    }
+
+    public ProjectEntity addEmployee(long id, EmployeeAssignment dto, String authorization) {
+
+        ProjectEntity originalProject = readByID(id);
+        employeeService.employeeExists(dto.getEmployeeId(),authorization);
+        employeeService.employeeHasSkill(dto.getEmployeeId(), dto.getSkillId(), authorization);
+
+        List<EmployeeAssignment> currentEmployees = originalProject.getEmployeeAssignment();
+
+        currentEmployees.add(dto);
+        originalProject.setEmployeeAssignment(currentEmployees);
+
+        return repository.save(originalProject);
     }
 
     public List<ProjectEntity> readAll() {
@@ -108,16 +124,8 @@ public class ProjectService {
         return oProject.get();
     }
 
-    private void verifyEmployeeExists(Long emId) {
-        if (emId == null) {
-            throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
-        }
-        // Optional: RestTemplate-Aufruf prüfen
-        // Dummy: Angenommen, Mitarbeiter existiert
-    }
-
     private void checkEmployeeAlreadyAssigned(Long emId) {
-        if (repository.existsByEmId(emId)) {
+        if (repository.existsByEmployeeAssignment_EmployeeId(emId)) {
             throw new EmployeeConflictException("Mitarbeiter ist bereits in einem anderen Projekt eingesetzt");
         }
     }
@@ -140,6 +148,7 @@ public class ProjectService {
         ProjectEntity entityToDelete = readByID(id);
         repository.delete(entityToDelete);
     }
+
     public ProjectEntity update(long id, ProjectCreateDTO dto, String authorization) {
         ProjectEntity existing = this.readByID(id);
 
@@ -168,7 +177,8 @@ public class ProjectService {
         }
 
         // Employee und Kunde prüfen
-        verifyEmployeeExists(dto.getEmId());
+        // verifyEmployeeExists(dto.getEmId());
+        employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
 
         // Felder aktualisieren
@@ -186,8 +196,8 @@ public class ProjectService {
             dto.getEmployeeAssignment().forEach(a -> {
                 boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
                 if (!hasSkill) {
-                    throw new BadRequestException("Mitarbeiter " + a.getEmployeeId() +
-                            " besitzt Skill " + a.getSkillId() + " nicht.");
+                    throw new BadRequestException(
+                            "Mitarbeiter " + a.getEmployeeId() + " besitzt Skill " + a.getSkillId() + " nicht.");
                 }
             });
 
