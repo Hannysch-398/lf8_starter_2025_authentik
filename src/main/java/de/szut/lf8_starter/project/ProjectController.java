@@ -114,6 +114,14 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{projectId}/employees/{employeeId}")
+    public ResponseEntity<Void> removeEmployeeFromProject(
+            @PathVariable long projectId,
+            @PathVariable long employeeId) {
+
+        service.removeEmployeeFromProject(projectId, employeeId);
+        return ResponseEntity.noContent().build();
+    }
     @PostMapping("/{id}")
     public ResponseEntity<Void> addEmployeeToProject(@PathVariable long id, @Valid @RequestBody EmployeeAssignment dto,
                                                      @RequestHeader("Authorization") String authorization) {

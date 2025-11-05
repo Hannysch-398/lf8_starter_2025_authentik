@@ -13,6 +13,7 @@ import de.szut.lf8_starter.exceptionHandling.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,24 +41,7 @@ public class ProjectService {
     }
 
     public ProjectEntity create(ProjectCreateDTO dto, String authorization) {
-        // Pflichtfelder prüfen
-        if (dto.getEmId() == null) {
-            throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
-        }
-        if (dto.getCuId() == null) {
-            throw new BadRequestException("Kunden-ID darf nicht null sein");
-        }
-        if (dto.getCuName() == null || dto.getCuName().isBlank()) {
-            throw new BadRequestException("Kundenansprechpartner (ku_name) darf nicht leer sein");
-        }
-        if (dto.getStartDate() == null || dto.getEndDate() == null) {
-            throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
-        }
-        if (dto.getProjectName() == null) {
-            throw new BadRequestException("Projektname muss angegeben werden");
-        }
 
-//        boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
 
         // Employee und Kunde prüfen
         //verifyEmployeeExists(dto.getEmId());
@@ -70,7 +54,7 @@ public class ProjectService {
 
         // Datumsvalidierung
         if (entity.getEndDate().isBefore(entity.getStartDate())) {
-            throw new InvalidProjectDateException("Enddatum darf nicht vor Startdatum liegen.");
+            throw new InvalidProjectDateException("End date cannot be before start date.");
         }
 
         if (dto.getEmployeeAssignment() != null && !dto.getEmployeeAssignment().isEmpty()) {
@@ -78,7 +62,7 @@ public class ProjectService {
                 boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
                 if (!hasSkill) {
                     throw new BadRequestException(
-                            "Mitarbeiter " + a.getEmployeeId() + " besitzt Skill " + a.getSkillId() + " nicht.");
+                            "Employee " + a.getEmployeeId() + " has no skill" + a.getSkillId());
                 }
                 return new EmployeeAssignment(a.getEmployeeId(), a.getSkillId());
             }).toList();
@@ -90,7 +74,7 @@ public class ProjectService {
 
         //goal checken
         if (dto.getProjectgoal() == null || dto.getProjectgoal().isBlank()) {
-            throw new BadRequestException("Projektziel darf nicht leer sein");
+            throw new BadRequestException("Project goal must not be empty.");
         }
 
         entity.setActualEndDate(dto.getActualEndDate());
@@ -119,26 +103,28 @@ public class ProjectService {
     public ProjectEntity readByID(long id) {
         Optional<ProjectEntity> oProject = repository.findById(id);
         if (oProject.isEmpty()) {
-            throw new ResourceNotFoundException("Projekt mit ID " + id + " nicht gefunden");
+            throw new ResourceNotFoundException("End date cannot be before start date.");
         }
         return oProject.get();
     }
 
+
+
     private void checkEmployeeAlreadyAssigned(Long emId) {
-        if (repository.existsByEmployeeAssignment_EmployeeId(emId)) {
-            throw new EmployeeConflictException("Mitarbeiter ist bereits in einem anderen Projekt eingesetzt");
+        if (repository.existsByEmId(emId)) {
+            throw new EmployeeConflictException("Employee is already assigned to another project.");
         }
     }
 
     private void verifyCustomerExists(Long customerId) {
         if (customerId == null) {
-            throw new BadRequestException("Kunden-ID darf nicht null sein");
+            throw new BadRequestException("Customer-ID must not be null.");
         }
         try {
             restTemplate.getForObject(CUSTOMER_SERVICE_URL + "/" + customerId, String.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new ResourceNotFoundException("Kunde mit ID " + customerId + " nicht gefunden");
+                throw new ResourceNotFoundException("Kunde mit ID " + customerId + " not found");
             }
             throw e;
         }
@@ -151,30 +137,6 @@ public class ProjectService {
 
     public ProjectEntity update(long id, ProjectCreateDTO dto, String authorization) {
         ProjectEntity existing = this.readByID(id);
-
-        if (existing == null) {
-            throw new ResourceNotFoundException("Projekt mit ID " + id + " nicht gefunden");
-        }
-
-        // Pflichtfelder prüfen (wie bei create)
-        if (dto.getEmId() == null) {
-            throw new BadRequestException("Mitarbeiter-ID darf nicht null sein");
-        }
-        if (dto.getCuId() == null) {
-            throw new BadRequestException("Kunden-ID darf nicht null sein");
-        }
-        if (dto.getCuName() == null || dto.getCuName().isBlank()) {
-            throw new BadRequestException("Kundenansprechpartner darf nicht leer sein");
-        }
-        if (dto.getStartDate() == null || dto.getEndDate() == null) {
-            throw new BadRequestException("Start- und Enddatum müssen angegeben werden");
-        }
-        if (dto.getProjectName() == null || dto.getProjectName().isBlank()) {
-            throw new BadRequestException("Projektname darf nicht leer sein");
-        }
-        if (dto.getProjectgoal() == null || dto.getProjectgoal().isBlank()) {
-            throw new BadRequestException("Projektziel darf nicht leer sein");
-        }
 
         // Employee und Kunde prüfen
         // verifyEmployeeExists(dto.getEmId());
@@ -196,8 +158,10 @@ public class ProjectService {
             dto.getEmployeeAssignment().forEach(a -> {
                 boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
                 if (!hasSkill) {
-                    throw new BadRequestException(
-                            "Mitarbeiter " + a.getEmployeeId() + " besitzt Skill " + a.getSkillId() + " nicht.");
+
+                    throw new BadRequestException("Employee " + a.getEmployeeId() +
+                            " has no skill " + a.getSkillId() );
+
                 }
             });
 
@@ -206,9 +170,27 @@ public class ProjectService {
 
         // Datum prüfen
         if (existing.getEndDate().isBefore(existing.getStartDate())) {
-            throw new InvalidProjectDateException("Enddatum darf nicht vor Startdatum liegen.");
+            throw new InvalidProjectDateException("End date cannot be before start date.");
         }
         return this.repository.save(existing);
+    }
+    public void removeEmployeeFromProject(long projectId, long employeeId) {
+        ProjectEntity project = repository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found."));
+
+        List<EmployeeAssignment> assignments = project.getEmployeeAssignment();
+        if (assignments == null || assignments.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Keine Mitarbeiter im Projekt gefunden.");
+        }
+
+        boolean removed = assignments.removeIf(a -> a.getEmployeeId().equals(employeeId));
+
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee " + employeeId + " is not part of this project.");
+        }
+
+        project.setEmployeeAssignment(assignments);
+        repository.save(project);
     }
 
 }
