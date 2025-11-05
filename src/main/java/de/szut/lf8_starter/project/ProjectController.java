@@ -2,7 +2,7 @@ package de.szut.lf8_starter.project;
 
 
 import de.szut.lf8_starter.employee.EmployeeAssignment;
-import de.szut.lf8_starter.employee.dto.SkillDTO;
+import de.szut.lf8_starter.exceptionHandling.EmployeeConflictException;
 import de.szut.lf8_starter.project.dto.*;
 import de.szut.lf8_starter.employee.EmployeeMapper;
 import de.szut.lf8_starter.employee.EmployeeService;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,7 +74,6 @@ public class ProjectController implements ProjectControllerOpenAPI {
         //Projekt wird aus dem Projektservice geholt
         var project = this.service.readByID(id);
 
-        //Es wird geguckt ob das Projekt überhaupt existiert das angefordert wurde
         if (project == null) {
             return ResponseEntity.notFound().build();
         }
@@ -96,7 +94,10 @@ public class ProjectController implements ProjectControllerOpenAPI {
         var assignments = project.getEmployeeAssignment();
         if (assignments != null && !assignments.isEmpty()) {
             // Mitarbeiter hängen noch am Projekt → 409 Conflict
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            throw new EmployeeConflictException("Project cannot be deleted - employee still assigned.");
+
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
         }
 
         service.delete(id);
