@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/lf8_starter/projects")
 
-public class ProjectController {
+public class ProjectController implements ProjectControllerOpenAPI {
 
     private final ProjectService service;
     private final ProjectMapper mapper;
