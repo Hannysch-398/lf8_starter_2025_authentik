@@ -23,14 +23,7 @@ public class ProjectMapper {
         newProject.setStartDate(dto.getStartDate());
         newProject.setEndDate(dto.getEndDate());
         newProject.setActualEndDate(dto.getActualEndDate());
-        // DTO → Entity: employeeAssignments umwandeln
-        if (dto.getEmployeeAssignment() != null) {
-            List<EmployeeAssignment> assignments = dto.getEmployeeAssignment().stream()
-                    .map(a -> new EmployeeAssignment(a.getEmployeeId(), a.getSkillId()))
-                    .toList();
-            newProject.setEmployeeAssignment(assignments);
-        }
-
+        newProject.setEmployeeAssignment(dto.getEmployeeAssignment());
 
         return newProject;
     }
@@ -46,13 +39,8 @@ public class ProjectMapper {
         dto.setStartDate(entity.getStartDate());
         dto.setEndDate(entity.getEndDate());
         dto.setActualEndDate(entity.getActualEndDate());
+        dto.setEmployeeAssignment(entity.getEmployeeAssignment());
 
-        // Entity → DTO: employeeAssignment umwandeln
-        if (entity.getEmployeeAssignment() != null) {
-            dto.setEmployeeAssignment(entity.getEmployeeAssignment().stream()
-                    .map(a -> new EmployeeAssignment(a.getEmployeeId(), a.getSkillId()))
-                    .toList());
-        }
         return dto;
     }
 

@@ -106,18 +106,10 @@ public class ProjectService {
     public ProjectEntity readByID(long id) {
         Optional<ProjectEntity> oProject = repository.findById(id);
         if (oProject.isEmpty()) {
-            throw new ResourceNotFoundException("End date cannot be before start date.");
+            throw new ResourceNotFoundException("Project with ID " + id + " not found.");
         }
         return oProject.get();
     }
-
-
-
-//    private void checkEmployeeAlreadyAssigned(Long emId) {
-//        if (repository.existsByEmployeeAssignment_EmployeeId(emId)) {
-//            throw new EmployeeConflictException("Employee is already assigned to another project.");
-//        }
-//    }
 
     private void verifyCustomerExists(Long customerId) {
         if (customerId == null) {
@@ -142,7 +134,6 @@ public class ProjectService {
         ProjectEntity existing = this.readByID(id);
 
         // Employee und Kunde prüfen
-        // verifyEmployeeExists(dto.getEmId());
         employeeService.employeeExists(dto.getEmId(),authorization);
         verifyCustomerExists(dto.getCuId());
 
@@ -153,11 +144,10 @@ public class ProjectService {
         existing.setProjectgoal(dto.getProjectgoal());
         existing.setStartDate(dto.getStartDate());
         existing.setEndDate(dto.getEndDate());
-        existing.setActualEndDate(dto.getActualEndDate()); // falls du das neue Feld hast
+        existing.setActualEndDate(dto.getActualEndDate());
 
-        // Optional: Mitarbeiter neu zuordnen (wenn DTO eine neue Liste hat)
+
         if (dto.getEmployeeAssignment() != null) {
-            // Optional: Validierung (wie beim Create)
             dto.getEmployeeAssignment().forEach(a -> {
                 boolean hasSkill = employeeService.employeeHasSkill(a.getEmployeeId(), a.getSkillId(), authorization);
                 if (!hasSkill) {
@@ -183,7 +173,7 @@ public class ProjectService {
 
         List<EmployeeAssignment> assignments = project.getEmployeeAssignment();
         if (assignments == null || assignments.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Keine Mitarbeiter im Projekt gefunden.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Employee for this project found.");
         }
 
         boolean removed = assignments.removeIf(a -> a.getEmployeeId().equals(employeeId));
@@ -196,34 +186,6 @@ public class ProjectService {
         repository.save(project);
     }
 
-//    private void checkEmployeeAvailability(Long employeeId, LocalDate startDate, LocalDate endDate, Long id) {
-//        // Hole alle Projekte, in denen der Mitarbeiter bereits eingeplant ist
-//        List<ProjectEntity> allProjects = repository.findAll();
-//
-//        for (ProjectEntity project : allProjects) {
-//            List<EmployeeAssignment> assignments = project.getEmployeeAssignment();
-//            if (assignments == null) continue;
-//
-//            // Prüfen, ob der Mitarbeiter in diesem Projekt eingeplant ist
-//            boolean isAssigned = assignments.stream()
-//                    .anyMatch(a -> a.getEmployeeId().equals(employeeId));
-//
-//            if (isAssigned) {
-//                LocalDate projectStart = project.getStartDate();
-//                LocalDate projectEnd = project.getEndDate();
-//
-//                // Prüfen, ob sich die Projektzeiträume überschneiden
-//                boolean overlaps = !(projectEnd.isBefore(startDate) || projectStart.isAfter(endDate));
-//
-//                if (overlaps) {
-//                    throw new EmployeeConflictException(
-//                            "Employee " + employeeId + " is already assigned to another project during this period (" +
-//                                    projectStart + " - " + projectEnd + ")."
-//                    );
-//                }
-//            }
-//        }
-//    }
 
     private void checkEmployeeAvailability(Long emId, LocalDate startDate, LocalDate endDate, Long projectId) {
         List<ProjectEntity> overlappingProjects = repository.findAll().stream()

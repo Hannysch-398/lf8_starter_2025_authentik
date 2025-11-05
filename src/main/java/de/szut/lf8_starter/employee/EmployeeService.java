@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private final RestTemplate restTemplate;
-    //    @Value("${employee.service.url}")
     private static final String EMPLOYEE_SERVICE_URL = "https://employee-api.szut.dev/employees";
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
@@ -60,20 +59,7 @@ public class EmployeeService {
         }
     }
 
-//
-//    public GetEmployeeDTO getEmployee(Long emId) {
-//        String url = employeeServiceUrl + emId;
-//        try {
-//            return restTemplate.getForObject(url, GetEmployeeDTO.class);
-//        } catch (HttpClientErrorException.NotFound e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mitarbeiter nicht gefunden");
-//        }
-//
-//    }
 
-    //    public List<GetEmployeeDTO> getEmployees(List<EmployeeAssignment> employeeIds) {
-//        return employeeIds.stream().map(this::getEmployee).toList();
-//    }
     public GetEmployeeDTO getEmployee(Long emId, String authorization) {
         String url = "https://employee-api.szut.dev/employees/" + emId;
 
